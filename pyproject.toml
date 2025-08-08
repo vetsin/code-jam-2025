@@ -8,7 +8,7 @@ authors = [
 ]
 version = "0.1.0"
 readme = "README.md"
-requires-python = ">=3.12"
+requires-python = ">=3.13"
 dependencies = [
     "nicegui>=2.22.1",
 ]
@@ -19,8 +19,28 @@ dependencies = [
 # This list will have to be migrated if you wish to use another dependency manager.
 dev = [
     "pre-commit~=4.2.0",
+    "pytest-selenium>=4.1.0",
+    "pytest-asyncio>=0.23.0",
+    "pytest-watcher>=0.4.2" ,
+    "pytest>=8.4.1",
     "ruff~=0.12.2",
 ]
+
+[virualenvs]
+create = true
+in-project = true
+
+[tool.pytest.ini_options]
+pythonpath = [ "src" ]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+asyncio_default_fixture_loop_scope = "function"
+filterwarnings = [
+    'ignore::DeprecationWarning:^vbuild(\.|$)',
+    'ignore::DeprecationWarning:^websockets\.legacy(\.|$)',
+    'ignore::DeprecationWarning:^uvicorn\.protocols\.websockets(\.|$)',
+]
+
 
 [tool.ruff]
 # Increase the line length. This breaks PEP8 but it is way easier to work with.
@@ -35,6 +55,7 @@ fix = true
 # The directory containing the source code. If you choose a different project layout
 # you will need to update this value.
 src = ["src"]
+exclude = ["tests"]
 
 [tool.ruff.lint]
 # Enable all linting rules.
