@@ -4,7 +4,7 @@ This module figures out how to tie everything together and export the app.
 """
 
 from nicegui import ui
-from ..components.passcode_factories.map import map_lock_factory
+from ..components.passcode_factories.map import MapLock
 from ..components.passcode_factories import Passcode
 
 
@@ -33,7 +33,7 @@ def app() -> ui.element:
         with login_container:
             ui.separator()
             ui.label("Map Lock")
-            map_lock_factory(submit_passcode=handle_passcode_submission)
+            MapLock(handle_passcode_submission)
 
     def handle_passcode_submission(code: Passcode) -> None:
         """Handle what happens when a passcode is submitted."""
