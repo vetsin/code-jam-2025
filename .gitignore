@@ -15,7 +15,9 @@ env
 *.log
 
 # PyEnv version selector
-.python-version
+# .python-version
+# https://github.com/orgs/pyenv/discussions/1917 isn't it good to keep this in version control?
+# just as a "this is a version we know this will compile on"
 
 # Built objects
 *.so
