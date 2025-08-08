@@ -1,9 +1,8 @@
 from crypto import UnlockKey
 
+
 class Vault:
-    """
-    Represents the database we read and write to.
-    """
+    """Represents the database we read and write to."""
 
     def __init__(self, vault: bytes):
         pass
@@ -17,8 +16,10 @@ class Vault:
     def is_unlocked(self) -> bool:
         return False
 
+
 class VaultKeyValue:
     """Represents a single entry in the password vault."""
+
     def __init__(self, key, value):
         # we may consider value being an object with *types*, or we may consider VaultKeyValue to be extendable
         # for example we may have 'username' with non-sensitive tr, 'password' with a sensitive str,
@@ -27,10 +28,10 @@ class VaultKeyValue:
         self.key = key
         self.value = value
 
+
 class VaultEntry:
-    """
-    The entries we store in the vault. It is presumed a VaultItem may have 1..N key:value pairs
-    """
+    """The entries we store in the vault. It is presumed a VaultItem may have 1..N key:value pairs"""
+
     def __init__(self, name):
         self.name = name
 
@@ -39,4 +40,3 @@ class VaultEntry:
 
     def get_key_value(self, key):
         pass
-
