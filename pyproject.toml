@@ -41,6 +41,8 @@ src = ["src"]
 select = ["ALL"]
 # Ignore some of the most obnoxious linting errors.
 ignore = [
+    # Imperative mood docstring.
+    "D401",
     # Missing docstrings.
     "D100",
     "D104",
