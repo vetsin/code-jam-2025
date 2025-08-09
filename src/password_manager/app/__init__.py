@@ -7,6 +7,18 @@ from nicegui import ui
 from ..components.passcode_factories.map import MapLock
 from ..components.passcode_factories import Passcode
 
+from password_manager.components import login
+from password_manager.components.passcode_factories import Passcode
+
+
+def temp_submit_passcode_check(p: Passcode) -> None:
+    """Just print out the passcode.
+
+    In the full app, this might hash the passcode, validate against the user,
+    and go to the next screen if it validates.
+    """
+    print(f"we received the passcode {p}")
+
 
 def app() -> ui.element:
     """The main ui element representing the entire app."""
@@ -60,5 +72,8 @@ def app() -> ui.element:
             ui.item("Map Lock", on_click=launch_map_lock_passcode)
             ui.item("add a thing", on_click=add)
             ui.item("Item 2", on_click=lambda: ui.notify("You clicked item 2"))
+
+    with login_container as app:
+        login.login(temp_submit_passcode_check)
 
     return app

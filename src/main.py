@@ -4,4 +4,5 @@ from password_manager import app
 
 app.app()
 
-ui.run()
+if __name__ in {"__main__", "__mp_main__"}:
+    ui.run()
