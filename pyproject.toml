@@ -62,6 +62,8 @@ exclude = ["tests"]
 select = ["ALL"]
 # Ignore some of the most obnoxious linting errors.
 ignore = [
+    # Allow Any type in function args.
+    "ANN401",
     # Imperative mood docstring.
     "D401",
     # Missing docstrings.
