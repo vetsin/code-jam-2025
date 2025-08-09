@@ -1,5 +1,6 @@
 from collections.abc import Callable
 from nicegui import events, ui
+import struct
 
 from . import Passcode
 
@@ -7,8 +8,6 @@ class MapLock:
     """See https://github.com/vetsin/code-jam-2025/issues/6."""
 
     def __init__(self, submit_passcode: Callable[[Passcode], None]):
-        self.passcode_input = ui.number(label='Enter Passcode', format='0', step=1)
-
         self.map = ui.leaflet(center=(51.505, -0.090), zoom=3)
         self.map.on('map-click', self.on_map_input)
 
@@ -16,14 +15,15 @@ class MapLock:
         self.latitude = 0
         self.longitude = 0
 
-        ui.button('Unlock', on_click=self.handle_submit)
+        ui.button('Unlock', on_click=lambda: self.handle_unlock())
 
-    def handle_submit():
+    def handle_unlock(self):
         try:
-            value = int(passcode_input.value)
-            submit_passcode(value)
+            value = self.get_passcode_from_placement()
+            # submit_passcode(value)
         except (ValueError, TypeError):
-            ui.notify('Please enter a valid number', color='negative')
+            pass
+            ui.notify('Please enter a valid place', color='negative')
             
     def on_map_input(self, e: events.GenericEventArguments) -> None:
         self.latitude = e.args['latlng']['lat']
@@ -32,7 +32,7 @@ class MapLock:
 
     def set_marker_to_location(self):
         self.marker.move(self.latitude, self.longitude)
-        print(self.get_passcode_from_placement())
 
-    def get_passcode_from_placement(self) -> int:
-        return f"{self.latitude}, {self.longitude}"
+    def get_passcode_from_placement(self) -> Passcode:
+        if self.latitude == 0 and self.longitude == 0: raise ValueError("Cannot be Zero")
+        return struct.pack('>ff', self.latitude, self.longitude)
