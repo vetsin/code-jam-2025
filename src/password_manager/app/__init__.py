@@ -15,7 +15,7 @@ def temp_submit_passcode_check(p: Passcode) -> None:
     In the full app, this might hash the passcode, validate against the user,
     and go to the next screen if it validates.
     """
-    print(f"we received the passcode {p}")
+    print(f"we received the passcode {p!r}")
 
 
 def app() -> ui.element:

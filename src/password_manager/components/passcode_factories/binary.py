@@ -20,8 +20,7 @@ class BitString:
 
     def to_passcode(self) -> Passcode:
         """Get the `Passcode` repr of this bitstring."""
-        # passcodes are ints right now. we can do this trivially.
-        return self._inner
+        return self._inner.to_bytes(byteorder="big")
 
 
 def binaryinput_factory(submit_passcode: Callable[[Passcode], None]) -> ui.element:
