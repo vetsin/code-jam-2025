@@ -9,12 +9,15 @@ src/
 ├── main.py
 └── password_manager/
     ├── app/
-    └── components/
+    ├── components/
+    └── util/
 ```
 
-The layout for the frontend code takes inspiration from [bulletproof-react](https://github.com/alan2207/bulletproof-react/blob/master/docs/project-structure.md). We have the `password_manager` library that exposes an app and some components.
+The layout for the frontend code takes inspiration from [bulletproof-react](https://github.com/alan2207/bulletproof-react/blob/master/docs/project-structure.md). We have the `password_manager` library that exposes a few modules.
 
-`app.app()` spawns the entire nicegui application, and is used for the very small `main.py`. The components are generally any self-contained element that can be used elsewhere.
+- `app/` is responsible for the `app.app()` that spawns the entire nicegui application, and is used for the very small `main.py`.
+- `components/` are generally any self-contained element that can be used elsewhere.
+- `util/` provides utility functions like `todo()`, which assists type checking during development.
 
 > [!NOTE]
 >
@@ -27,3 +30,9 @@ The layout for the frontend code takes inspiration from [bulletproof-react](http
 This project can be developed with `uv`. Main entrypoint is `uv run src/main.py`.
 
 Run `uvx pre-commit install` to install the `.pre-commit-config.yaml` lints.
+
+Some general rules:
+
+- Follow <https://www.conventionalcommits.org/en/v1.0.0/>.
+- Make all edits to the main branch via pull requests (squash merge).
+  - Feel free to approve your own PR for the sake of development speed.
