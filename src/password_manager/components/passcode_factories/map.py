@@ -8,6 +8,8 @@ class MapLock:
     """See https://github.com/vetsin/code-jam-2025/issues/6."""
 
     def __init__(self, submit_passcode: Callable[[Passcode], None]):
+        self.submit_passcode = submit_passcode
+
         self.map = ui.leaflet(center=(51.505, -0.090), zoom=3)
         self.map.on('map-click', self.on_map_input)
 
@@ -20,7 +22,7 @@ class MapLock:
     def handle_unlock(self):
         try:
             value = self.get_passcode_from_placement()
-            # submit_passcode(value)
+            self.submit_passcode(value)
         except (ValueError, TypeError):
             pass
             ui.notify('Please enter a valid place', color='negative')
