@@ -12,7 +12,7 @@ __all__ = [
     "PasscodeInputFactory",
 ]
 
-type Passcode = int
+type Passcode = bytes
 
 # TODO: does it make more sense to define what a passcode element is here, or where we use it?
 type PasscodeInputFactory = Callable[[Callable[[Passcode], None]], nicegui.ui.element]
