@@ -1,6 +1,6 @@
 from collections.abc import Callable
 from nicegui import events, ui
-import struct
+from struct import pack
 
 from . import Passcode
 
@@ -25,7 +25,6 @@ class MapLock:
             value = self.get_passcode_from_placement()
             self.submit_passcode(value)
         except (ValueError, TypeError):
-            pass
             ui.notify("Please enter a valid place", color="negative")
 
     def on_map_input(self, e: events.GenericEventArguments) -> None:
@@ -39,4 +38,4 @@ class MapLock:
     def get_passcode_from_placement(self) -> Passcode:
         if self.latitude == 0 and self.longitude == 0:
             raise ValueError("Cannot be Zero")
-        return struct.pack(">ff", self.latitude, self.longitude)
+        return pack(">ff", self.latitude, self.longitude)

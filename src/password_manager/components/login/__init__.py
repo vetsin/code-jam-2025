@@ -4,9 +4,9 @@ from nicegui import ui
 
 from password_manager.components.passcode_factories import Passcode, PasscodeInputFactory
 from password_manager.components.passcode_factories.binary import binaryinput_factory
+from password_manager.components.passcode_factories.map import MapLock
 from password_manager.components.passcode_factories.text import textinput_factory
 from password_manager.components.passcode_factories.typst import typstinput_factory
-from password_manager.components.passcode_factories.map import MapLock
 
 
 def login(submit_passcode: Callable[[Passcode], None]) -> ui.element:
