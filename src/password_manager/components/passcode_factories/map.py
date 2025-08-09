@@ -10,7 +10,8 @@ class MapLock:
         self.passcode_input = ui.number(label='Enter Passcode', format='0', step=1)
 
         self.map = ui.leaflet(center=(51.505, -0.090), zoom=3)
-        self.map.on('map-click', self.set_marker)
+        self.marker = self.map.marker(latlng=(0, 0))
+        self.map.on('map-click', self.on_map_input)
 
         ui.button('Unlock', on_click=self.handle_submit)
 
@@ -20,8 +21,12 @@ class MapLock:
             submit_passcode(value)
         except (ValueError, TypeError):
             ui.notify('Please enter a valid number', color='negative')
-
-    def set_marker(self, e: events.GenericEventArguments):
+            
+    def on_map_input(self, e: events.GenericEventArguments) -> None:
         latitude = e.args['latlng']['lat']
         longitude = e.args['latlng']['lng']
-        self.map.marker(latlng=(latitude, longitude))
+        self.set_marker_to_location(latitude, longitude)
+
+    def set_marker_to_location(self, latitude: float, longitude: float):
+        self.marker.move(latitude, longitude)
+
