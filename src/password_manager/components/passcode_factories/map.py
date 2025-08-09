@@ -18,7 +18,7 @@ class MapLock:
         self.latitude = 0
         self.longitude = 0
 
-        ui.button("Unlock", on_click=lambda: self.handle_unlock())
+        self.unlock_button = ui.button("Unlock", on_click=lambda: self.handle_unlock())
 
     def handle_unlock(self):
         try:
@@ -39,3 +39,7 @@ class MapLock:
         if self.latitude == 0 and self.longitude == 0:
             raise ValueError("Cannot be Zero")
         return pack(">ff", self.latitude, self.longitude)
+
+def map_input_factory(submit_passcode: Callable[[Passcode], None]) -> ui.element:
+    map_lock = MapLock(submit_passcode)
+    return map_lock.unlock_button
