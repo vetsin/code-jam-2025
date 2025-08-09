@@ -1,6 +1,13 @@
-class VaultDatabase:
-    def load_vault(self, vault_id: str) -> bytes:
-        raise NotImplementedError("This method should be implemented by subclasses.")
+from password_manager.util import todo
 
-    def save_vault(self, vault_id: str, vault_data: bytes) -> None:
-        raise NotImplementedError("This method should be implemented by subclasses.")
+
+class VaultDatabase:
+    """A vault database."""
+
+    def load_vault(self, _vault_id: str) -> bytes:
+        """Load a vault."""
+        todo()
+
+    def save_vault(self, _vault_id: str, _vault_data: bytes) -> None:
+        """Save a vault."""
+        todo()
