@@ -1,7 +1,6 @@
 class VaultReadError(Exception):
-    """Upon failure to read a vault"""
+    """Failure to read a vault."""
 
 
 class VaultSaveError(Exception):
-    """Upon failure to save a vault"""
-
+    """Failure to save a vault."""

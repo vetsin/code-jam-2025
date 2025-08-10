@@ -97,7 +97,7 @@ class Vault:
         """Does this entry exist?"""
         return name_or_id in self.entries
 
-    def delete_entry(self, vault_entry: str|VaultEntry) -> None:
+    def delete_entry(self, vault_entry: str | VaultEntry) -> None:
         """Remove the given entry"""
         self.entries.remove(vault_entry)
 
@@ -118,10 +118,10 @@ class Vault:
 def decrypt_vault(data: bytes, key: crypto.UnlockKey) -> Vault:
     """Given the key, decrypt the bytes into a Vault"""
     decrypted_bytes = crypto.decrypt_data(data, key)
-    return pickle.loads(decrypted_bytes) # noqa: S301
+    return pickle.loads(decrypted_bytes)  # noqa: S301
+
 
 def encrypt_vault(vault: Vault, key: crypto.UnlockKey) -> bytes:
     """Given the key, encrypt the Vault"""
     decrypted_bytes = pickle.dumps(vault)
     return crypto.encrypt_data(decrypted_bytes, key)
-
