@@ -14,13 +14,13 @@ from password_manager.components.passcode_factories import Passcode
 logger = logging.getLogger()
 
 
-def temp_submit_passcode_check(p: Passcode) -> None:
+def temp_submit_passcode_check(passcode: Passcode) -> None:
     """Just print out the passcode.
 
     In the full app, this might hash the passcode, validate against the user,
     and go to the next screen if it validates.
     """
-    logger.info(f"we received the passcode {p!r}")
+    logger.info(f"we received the passcode {passcode!r}")
 
 
 @ui.page("/")
