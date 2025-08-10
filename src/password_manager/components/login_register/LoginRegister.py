@@ -14,7 +14,6 @@ TITLE_SECTION_LABEL = "Login / Register"
 USERNAME_SECTION_LABEL = "Username"
 USERNAME_SECTION_PLACEHOLDER = "username"
 PASSWORD_SECTION_LABEL = "Password"
-PASSWORD_INPUT_DROPDOWN_LABEL = "Select Password Input Type"
 ERROR_MESSAGE_ON_NULL_USERNAME = "Please enter a valid username"
 ERROR_MESSAGE_ON_NULL_PASSCODE = "Please set a passcode"
 
