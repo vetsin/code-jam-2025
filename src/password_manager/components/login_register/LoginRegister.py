@@ -15,6 +15,8 @@ USERNAME_SECTION_LABEL = "Username"
 USERNAME_SECTION_PLACEHOLDER = "username"
 PASSWORD_SECTION_LABEL = "Password"
 PASSWORD_INPUT_DROPDOWN_LABEL = "Select Password Input Type"
+ERROR_MESSAGE_ON_NULL_USERNAME = "Please enter a valid username"
+ERROR_MESSAGE_ON_NULL_PASSCODE = "Please set a passcode"
 
 PASSWORD_INPUTS = (
     ("Anagram", anagraminput_factory),
@@ -31,7 +33,6 @@ class LoginRegister:
 
         self.username = ""
         self.passcode = None
-
         self.__make_ui()
 
     def __make_ui(self) -> None:
@@ -80,5 +81,12 @@ class LoginRegister:
         self.passcode = new_passcode
 
     def __on_submit(self) -> None:
-        #TODO Add check for black username or passcode
+        if not self.username:
+            ui.notify(ERROR_MESSAGE_ON_NULL_USERNAME, color="negative")
+            return
+
+        if self.passcode == None:
+            ui.notify(ERROR_MESSAGE_ON_NULL_PASSCODE, color="negative")
+            return
+
         self.submit_login(self.username, self.passcode)
