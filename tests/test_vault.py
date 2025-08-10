@@ -20,7 +20,6 @@ class TestVault(TestCase):
         v.delete_entry(test_entry)
         self.assertEqual(len(v.entries), 0)
 
-      
     def test_encrypt_decrypt(self):
       key = crypto.SimpleUnlockKey()
       key.seed(b'some insecure test key')
