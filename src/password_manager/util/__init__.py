@@ -1,4 +1,5 @@
-from typing import NoReturn
+from copy import deepcopy
+from typing import Iterable, Iterator, NoReturn, TypeVar
 
 
 def todo(msg: str = "") -> NoReturn:
@@ -25,3 +26,11 @@ def todo(msg: str = "") -> NoReturn:
     """
     msg = f"TODO: {msg}"
     raise NotImplementedError(msg)
+
+
+T = TypeVar("T")
+
+
+def dbg(x: T) -> T:
+    print(x)
+    return x

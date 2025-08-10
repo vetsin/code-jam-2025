@@ -4,6 +4,8 @@ from nicegui import ui
 
 from . import Passcode
 
+MAX_PASSCODE_BYTE_LIMIT = 20
+
 
 class BitString:
     """A string of bits."""
@@ -20,7 +22,7 @@ class BitString:
 
     def to_passcode(self) -> Passcode:
         """Get the `Passcode` repr of this bitstring."""
-        return self._inner.to_bytes(byteorder="big")
+        return self._inner.to_bytes(byteorder="big", length=MAX_PASSCODE_BYTE_LIMIT)
 
 
 def binaryinput_factory(submit_passcode: Callable[[Passcode], None]) -> ui.element:

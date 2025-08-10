@@ -35,15 +35,17 @@ in-project = true
 
 [tool.pytest.ini_options]
 pythonpath = [ "src" ]
+testpaths = ["tests", "src/password_manager/components/passcode_factories/snake"]
 asyncio_mode = "auto"
-testpaths = ["tests"]
 asyncio_default_fixture_loop_scope = "function"
 filterwarnings = [
     'ignore::DeprecationWarning:^vbuild(\.|$)',
     'ignore::DeprecationWarning:^websockets\.legacy(\.|$)',
     'ignore::DeprecationWarning:^uvicorn\.protocols\.websockets(\.|$)',
 ]
-
+addopts = [
+    "--import-mode=importlib",  # pytest docs said this can be helpful
+]
 
 [tool.ruff]
 # Increase the line length. This breaks PEP8 but it is way easier to work with.
