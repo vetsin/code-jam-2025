@@ -8,18 +8,19 @@ import logging
 from nicegui import ui
 
 from password_manager.components import login
+from password_manager.components.login_register.LoginRegister import LoginRegister
 from password_manager.components.passcode_factories import Passcode
 
 logger = logging.getLogger()
 
 
-def temp_submit_passcode_check(p: Passcode) -> None:
+def temp_submit_passcode_check(passcode: Passcode) -> None:
     """Just print out the passcode.
 
     In the full app, this might hash the passcode, validate against the user,
     and go to the next screen if it validates.
     """
-    logger.info(f"we received the passcode {p!r}")
+    logger.info(f"we received the passcode {passcode!r}")
 
 
 @ui.page("/")
@@ -28,6 +29,10 @@ def index() -> None:
     login_container = ui.column().classes("self-center")
 
     with login_container as app:
-        login.login(temp_submit_passcode_check)
+        LoginRegister(on_login_submit)
 
     # return app
+
+
+def on_login_submit(username: str, passcode: Passcode) -> None:
+    print(f"Test on login submit {username}: {passcode}")
