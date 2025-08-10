@@ -14,5 +14,5 @@ ui.run_with(
 )
 
 #if __name__ in {"__main__", "__mp_main__"}:
-if __name__ == '__main__':
-    uvicorn.run('main:fastapi_app', log_level='info', reload=True)
+if __name__ == "__main__":
+    uvicorn.run("main:fastapi_app", log_level="info", reload=True)

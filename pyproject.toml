@@ -65,6 +65,8 @@ exclude = ["tests"]
 select = ["ALL"]
 # Ignore some of the most obnoxious linting errors.
 ignore = [
+    # allow no return type on init, because that's stupid
+    "ANN204",
     # Allow Any type in function args.
     "ANN401",
     # Imperative mood docstring.
@@ -79,6 +81,7 @@ ignore = [
     "D203",
     "D213",
     # Docstring punctuation.
+    "D400", 
     "D415",
     # Docstring quotes.
     "D301",
@@ -90,4 +93,11 @@ ignore = [
     "TD002",
     "TD003",
     "FIX",
+    # this is dumb exception stuff
+    "EM101",
+    "TRY003",
+    "PLR2004",
+    "D205",
+    "SIM117",
+    "ERA001",
 ]

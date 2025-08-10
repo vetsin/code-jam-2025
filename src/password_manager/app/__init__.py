@@ -20,7 +20,7 @@ def temp_submit_passcode_check(p: Passcode) -> None:
     logger.info(f"we received the passcode {p!r}")
 
 
-@ui.page('/')
+@ui.page("/")
 def index() -> ui.element:
     """The main ui element representing the entire app."""
     login_container = ui.column().classes("self-center")

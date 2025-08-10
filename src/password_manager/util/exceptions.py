@@ -1,5 +1,7 @@
-class VaultReadException(Exception):
-    pass
+class VaultReadError(Exception):
+    """Upon failure to read a vault"""
 
-class VaultSaveException(Exception):
-    pass
+
+class VaultSaveError(Exception):
+    """Upon failure to save a vault"""
+

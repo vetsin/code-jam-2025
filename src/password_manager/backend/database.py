@@ -1,53 +1,62 @@
 
 import logging
-from os import path, mkdir
-from typing import Generator
-from filelock import Timeout, FileLock
 from abc import ABC, abstractmethod
+from collections.abc import Generator
+from pathlib import Path
 
-from ..util.exceptions import *
-from ..components.vault import Vault
+from filelock import FileLock
+
+from password_manager.util.exceptions import VaultReadError, VaultSaveError
 
 logger = logging.getLogger()
 
 class VaultStorage(ABC):
-    @abstractmethod
-    def read(self, vault_id: str) -> bytes:
-      raise NotImplementedError()
+    """abstract storage method"""
 
     @abstractmethod
-    def write(self, vault_id: str, data: bytes):
-      raise NotImplementedError()
+    def read(self, vault_id: str) -> bytes:
+      """Read"""
+      raise NotImplementedError
+
+    @abstractmethod
+    def write(self, vault_id: str, data: bytes) -> None:
+      """Write"""
+      raise NotImplementedError
 
 
 class FileStorage(VaultStorage):
-    def __init__(self, base_path: str='~/.config/password-jam'):
-        self._base = path.expanduser(base_path)
-        if not path.exists(self._base):
-            mkdir(self._base)
+    """Just store to filesystem"""
+
+    def __init__(self, base_path: str="~/.config/password-jam"):
+        self._base = Path(base_path).expanduser()
+        if not Path.exists(self._base):
+            Path.mkdir(self._base)
 
     def read(self, vault_id: str) -> bytes:
+        """Return the vault, or raise"""
         try:
-            with FileLock(path.join(self._base, f"{vault_id}.lock")):
-                with open(path.join(self._base, vault_id), 'rb') as f:
+            with FileLock(self._base / f"{vault_id}.lock"):
+                with Path.open(self._base / vault_id, "rb") as f:
                     return f.read()
-        except FileNotFoundError:
-            logging.info(f"Vault '{vault_id}' was not found")
-            raise VaultReadException("Unable to read vault")
+        except FileNotFoundError as e:
+            logger.info("Vault '%s' was not found", vault_id)
+            raise VaultReadError("Unable to read vault") from e
         except Exception as e:
             # TODO: catch why and state so
-            raise VaultReadException("Unable to read vault", e)
+            raise VaultReadError("Unable to read vault", e) from e
 
-    def write(self, vault_id: str, data: bytes):
+    def write(self, vault_id: str, data: bytes) -> None:
+        """Write the vault, or raise"""
         try:
-            with FileLock(path.join(self._base, f"{vault_id}.lock")):
-                with open(path.join(self._base, vault_id), 'wb') as f:
+            with FileLock(self._base / f"{vault_id}.lock"):
+                with Path.open(self._base / vault_id, "wb") as f:
                     f.write(data)
-        except:
+        except Exception as e:
             # TODO: catch why and state so
-            raise VaultSaveException("Unable to save vault")
+            raise VaultSaveError("Unable to save vault") from e
 
 
 def get_vault_storage() -> Generator[VaultStorage]:
+    """Get whatever impl we usin"""
     storage_impl = FileStorage()
     yield storage_impl
