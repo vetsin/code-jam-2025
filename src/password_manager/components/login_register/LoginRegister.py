@@ -19,6 +19,7 @@ class LoginRegister:
 
         self.username = ""
         self.passcode = None
+
         self.__make_ui()
 
     def __make_ui(self) -> None:
@@ -35,7 +36,6 @@ class LoginRegister:
             PasscodeInput(self.__set_passcode)
 
             self.submit_button = ui.button(SUBMIT_BUTTON_TEXT, on_click=self.__on_submit)
-
 
     def __set_username(self, new_username: str) -> None:
         """This exists because the ui was being buggy with assignment in a lambda."""

@@ -18,6 +18,7 @@ PASSWORD_INPUTS = (
     ("Typst", typstinput_factory),
 )
 
+
 class PasscodeInput:
     def __init__(self, set_passcode: Callable[[str, Passcode], None]):
         self.set_passcode = set_passcode
