@@ -24,6 +24,7 @@ PASSWORD_INPUTS = (
     ("Typst", typstinput_factory),
 )
 
+
 class LoginRegister:
     def __init__(self):
         self.username = ""
@@ -37,9 +38,9 @@ class LoginRegister:
 
             with ui.card():
                 ui.input(
-                    label=USERNAME_SECTION_LABEL, 
-                    placeholder=USERNAME_SECTION_PLACEHOLDER, 
-                    on_change=lambda e: self.__set_username(e.value)
+                    label=USERNAME_SECTION_LABEL,
+                    placeholder=USERNAME_SECTION_PLACEHOLDER,
+                    on_change=lambda e: self.__set_username(e.value),
                 )
 
             self.__make_password_input_section()
@@ -49,22 +50,31 @@ class LoginRegister:
     def __make_password_input_section(self) -> None:
         with ui.card():
             ui.label(PASSWORD_SECTION_LABEL)
+            tabs = self.__make_password_input_tabs()
+            self.__make_tab_contents(tabs)
 
-            tab_options = []
-            with ui.tabs().classes('w-full') as tabs:
-                for password_input in PASSWORD_INPUTS:
-                    tab_options.append(ui.tab(password_input[0]))
+    def __make_tab_contents(self, tabs: list[ui.tab]) -> None:
+        with ui.tab_panels(tabs, value=PASSWORD_INPUTS[0][0]).classes("w-full"):
+            for password_input in PASSWORD_INPUTS:
+                self.__make_tab_content(password_input)
 
-            with ui.tab_panels(tabs, value=tab_options[0]).classes('w-full'):
-                for i, tab_option in enumerate(tab_options):
-                    with ui.tab_panel(tab_option):
-                        PASSWORD_INPUTS[i][1](self.__set_passcode)
-    
+    def __make_tab_content(self, password_input: tuple[str, Callable]) -> None:
+        with ui.tab_panel(password_input[0]):
+            password_input[1](self.__set_passcode)
+
+    def __make_password_input_tabs(self) -> list[ui.tab]:
+        with ui.tabs().classes("w-full") as tabs:
+            for password_input in PASSWORD_INPUTS:
+                ui.tab(password_input[0])
+
+        return tabs
+
     def __set_username(self, new_username: str) -> None:
-        """ This exists because the ui was being buggy with assignment in a lambda """
+        """This exists because the ui was being buggy with assignment in a lambda."""
         self.username = new_username
-        
+
     def __set_passcode(self, new_passcode: Passcode) -> None:
+        """This exists to work with the factory system."""
         self.passcode = new_passcode
 
     def __on_submit(self) -> None:
