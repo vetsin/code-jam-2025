@@ -1,4 +1,3 @@
-
 import logging
 from abc import ABC, abstractmethod
 from collections.abc import Generator
@@ -10,24 +9,25 @@ from password_manager.util.exceptions import VaultReadError, VaultSaveError
 
 logger = logging.getLogger()
 
+
 class VaultStorage(ABC):
     """abstract storage method"""
 
     @abstractmethod
     def read(self, vault_id: str) -> bytes:
-      """Read"""
-      raise NotImplementedError
+        """Read"""
+        raise NotImplementedError
 
     @abstractmethod
     def write(self, vault_id: str, data: bytes) -> None:
-      """Write"""
-      raise NotImplementedError
+        """Write"""
+        raise NotImplementedError
 
 
 class FileStorage(VaultStorage):
     """Just store to filesystem"""
 
-    def __init__(self, base_path: str="~/.config/password-jam"):
+    def __init__(self, base_path: str = "~/.config/password-jam"):
         self._base = Path(base_path).expanduser()
         if not Path.exists(self._base):
             Path.mkdir(self._base)
