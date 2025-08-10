@@ -29,6 +29,6 @@ def index() -> None:
     login_container = ui.column().classes("self-center")
 
     with login_container as app:
-        LoginRegister(temp_submit_passcode_check)
+        LoginRegister()
 
     # return app

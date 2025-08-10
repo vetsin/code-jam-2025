@@ -25,9 +25,9 @@ PASSWORD_INPUTS = (
 )
 
 class LoginRegister:
-    def __init__(self, submit_passcode: Callable[[Passcode], None]):
-        self.submit_passcode = submit_passcode
+    def __init__(self):
         self.username = ""
+        self.passcode = None
 
         self.__make_ui()
 
@@ -58,12 +58,14 @@ class LoginRegister:
             with ui.tab_panels(tabs, value=tab_options[0]).classes('w-full'):
                 for i, tab_option in enumerate(tab_options):
                     with ui.tab_panel(tab_option):
-                        PASSWORD_INPUTS[i][1](self.submit_passcode)
+                        PASSWORD_INPUTS[i][1](self.__set_passcode)
     
     def __set_username(self, new_username: str) -> None:
         """ This exists because the ui was being buggy with assignment in a lambda """
         self.username = new_username
+        
+    def __set_passcode(self, new_passcode: Passcode) -> None:
+        self.passcode = new_passcode
 
     def __on_submit(self) -> None:
-        print(self.passcode_input)
-        print(f"User logged in with USERNAME: {self.username}")
+        print(f"User logged in with USERNAME: {self.username}, PASSCODE: {self.passcode}")
