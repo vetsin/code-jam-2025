@@ -4,3 +4,7 @@ class VaultReadError(Exception):
 
 class VaultSaveError(Exception):
     """Failure to save a vault."""
+
+
+class VaultValidationError(Exception):
+    """Signature related issue."""

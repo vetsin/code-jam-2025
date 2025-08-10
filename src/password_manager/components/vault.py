@@ -74,6 +74,8 @@ class Vault:
         self.__id = str(uuid4())
         self._created = datetime.now(UTC)
         self.entries: list[VaultEntry] = []
+        # static secret given to us by the server, upon creation -- for validating identity
+        self.vault_secret: str = None 
 
     @property
     def id(self) -> str:

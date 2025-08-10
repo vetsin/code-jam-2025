@@ -94,7 +94,11 @@ def sign_data(data: bytes, key: bytes) -> bytes:
 
 
 def validate_signature(data: bytes, key: bytes) -> bytes:
-    """Validates the signature, and returns just the data (removes the signature)"""
+    """
+    Validates the signature, and returns just the data (removes the signature)
+
+    :raises: cryptography.exceptions.InvalidSignature
+    """
     h = HMAC(key, hashes.SHA256(), backend=default_backend())
     h.update(data[32:])
     # https://cryptography.io/en/latest/hazmat/primitives/mac/hmac/#cryptography.hazmat.primitives.hmac.HMAC.verify
