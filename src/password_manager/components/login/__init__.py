@@ -5,6 +5,7 @@ from nicegui import ui
 from password_manager.components.passcode_factories import Passcode, PasscodeInputFactory
 from password_manager.components.passcode_factories.binary import binaryinput_factory
 from password_manager.components.passcode_factories.map import map_input_factory
+from password_manager.components.passcode_factories.snake import snakeinput_factory
 from password_manager.components.passcode_factories.text import textinput_factory
 from password_manager.components.passcode_factories.typst import typstinput_factory
 
@@ -43,6 +44,7 @@ def login(submit_passcode: Callable[[Passcode], None]) -> ui.element:
         _spawn_new_passcode_as_item("Binary Input", binaryinput_factory, submit_passcode)
         _spawn_new_passcode_as_item("Typst Input", typstinput_factory, submit_passcode)
         _spawn_new_passcode_as_item("Map Input", map_input_factory, submit_passcode)
+        _spawn_new_passcode_as_item("Snake Input", snakeinput_factory, submit_passcode)
         # spawn more input types as we code them
 
     return login
