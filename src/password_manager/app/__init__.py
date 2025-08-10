@@ -33,5 +33,6 @@ def index() -> None:
 
     # return app
 
+
 def on_login_submit(username: str, passcode: Passcode) -> None:
     print(f"Test on login submit {username}: {passcode}")
