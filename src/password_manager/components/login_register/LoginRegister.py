@@ -26,7 +26,9 @@ PASSWORD_INPUTS = (
 
 
 class LoginRegister:
-    def __init__(self):
+    def __init__(self, submit_login: Callable[[str, Passcode], None]):
+        self.submit_login = submit_login
+
         self.username = ""
         self.passcode = None
 
@@ -78,4 +80,5 @@ class LoginRegister:
         self.passcode = new_passcode
 
     def __on_submit(self) -> None:
-        print(f"User logged in with USERNAME: {self.username}, PASSCODE: {self.passcode}")
+        #TODO Add check for black username or passcode
+        self.submit_login(self.username, self.passcode)

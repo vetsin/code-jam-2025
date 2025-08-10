@@ -29,6 +29,9 @@ def index() -> None:
     login_container = ui.column().classes("self-center")
 
     with login_container as app:
-        LoginRegister()
+        LoginRegister(on_login_submit)
 
     # return app
+
+def on_login_submit(username: str, passcode: Passcode) -> None:
+    print(f"Test on login submit {username}: {passcode}")
