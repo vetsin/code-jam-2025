@@ -14,6 +14,6 @@ def textinput_factory(submit_passcode: Callable[[Passcode], None]) -> ui.element
     """Just a boring normal text box for testing purposes."""
     return ui.input(
         label="enter password",
-        # placeholder="start typing",  # noqa: ERA001
+        # placeholder="start typing",
         on_change=lambda e: submit_passcode(str_to_passcode(e.value)),
     )
