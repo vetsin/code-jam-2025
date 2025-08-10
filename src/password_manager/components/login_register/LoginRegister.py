@@ -25,17 +25,17 @@ class LoginRegister:
     def __make_ui(self) -> None:
         with ui.card():
             ui.label(TITLE_SECTION_LABEL)
-
-            with ui.card():
-                ui.input(
-                    label=USERNAME_SECTION_LABEL,
-                    placeholder=USERNAME_SECTION_PLACEHOLDER,
-                    on_change=lambda e: self.__set_username(e.value),
-                )
-
+            self.__make_username_input_card()
             PasscodeInput(self.__set_passcode)
-
             self.submit_button = ui.button(SUBMIT_BUTTON_TEXT, on_click=self.__on_submit)
+
+    def __make_username_input_card(self) -> None:
+        with ui.card():
+            ui.input(
+                label=USERNAME_SECTION_LABEL,
+                placeholder=USERNAME_SECTION_PLACEHOLDER,
+                on_change=lambda e: self.__set_username(e.value),
+            )
 
     def __set_username(self, new_username: str) -> None:
         """This exists because the ui was being buggy with assignment in a lambda."""
