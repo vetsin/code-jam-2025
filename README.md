@@ -29,6 +29,8 @@ The layout for the frontend code takes inspiration from [bulletproof-react](http
 
 This project can be developed with `uv`. Main entrypoint is `uv run src/main.py`.
 
+To make the Typst input functional, add the [`typst` binary](https://github.com/typst/typst?tab=readme-ov-file#installation) to your PATH. Passcodes should be reproducible within the same Typst version.
+
 Run `uvx pre-commit install` to install the `.pre-commit-config.yaml` lints.
 
 Some general rules:
