@@ -22,6 +22,8 @@ We are a 'password manager'. The core data structure for our operation is a Vaul
 
 This must be the definitive specification. If implementations or other descriptions (like in English, above) differ, they or this should be fixed.
 
+The types designate the data's conceptual type, not real type. For example, the `Backend` could be implemented as a list.
+
 ```
 dataclass Backend:
   mut data: set[Vault]
