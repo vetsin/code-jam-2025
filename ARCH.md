@@ -31,7 +31,7 @@ dataclass Backend:
 dataclass Vault:
   const uuid: uint_128
   mut username: str
-  mut passcode: Passcode  # see password_manager/components/passcode_factories/__init__.py
+  mut key: Key  # created from hashed Password. see password_manager/components/passcode_factories/__init__.py::Password
   mut vault_data: list[VaultItem]
 
 dataclass VaultItem:
