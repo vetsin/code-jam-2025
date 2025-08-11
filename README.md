@@ -27,7 +27,7 @@ The layout for the frontend code takes inspiration from [bulletproof-react](http
 
 ## Contributing
 
-This project can be developed with `uv`. Main entrypoint is `uv run src/main.py`.
+This project can be developed with `uv`. Main entrypoint is `uv run src/main.py`. You can familiar yourself with the project architecture in [ARCH.md](ARCH.md).
 
 To make the Typst input functional, add the [`typst` binary](https://github.com/typst/typst?tab=readme-ov-file#installation) to your PATH. Passcodes should be reproducible within the same Typst version.
 
@@ -37,4 +37,4 @@ Some general rules:
 
 - Follow <https://www.conventionalcommits.org/en/v1.0.0/>.
 - Make all edits to the main branch via pull requests (squash merge).
-  - Feel free to approve your own PR for the sake of development speed.
+  - During the jam, feel free to approve your own PR for the sake of development speed.
