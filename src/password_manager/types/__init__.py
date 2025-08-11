@@ -104,3 +104,11 @@ class PasscodeInput(Component, ABC):
     @abstractmethod
     def __init__(self, on_submit: Callable[[Passcode], None], submit_text: str) -> None:
         """Spawn a PasscodeInput."""
+
+    @staticmethod
+    @abstractmethod
+    def get_name() -> str:
+        """Return the simple name identifying this input method.
+
+        Some examples are "Anagram," "Map," and "Snake."
+        """

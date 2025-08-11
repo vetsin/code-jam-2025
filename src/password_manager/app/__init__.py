@@ -9,7 +9,7 @@ from nicegui import ui
 
 from password_manager.components.credential_submitter.credential_submitter import CredentialSubmitter
 from password_manager.components.credential_submitter.password_submitter_wide import PasswordSubmitterWide
-from password_manager.components.passcode_factories import Passcode
+from password_manager.types import Passcode
 
 logger = logging.getLogger()
 

@@ -1,8 +1,9 @@
 from collections.abc import Callable
-from password_manager.components.credential_submitter.password_submitter_dropdown import password_submitter_dropdown
+from password_manager.components.credential_submitter.password_submitter_dropdown import PasswordSubmitterDropdown
 from password_manager.components.credential_submitter.password_submitter_wide import PasswordSubmitterWide
-from password_manager.components.passcode_factories import Passcode
 from nicegui import ui
+
+from password_manager.types import Component, Passcode
 
 SUBMIT_BUTTON_TEXT = "Login | Register"
 TITLE_SECTION_LABEL = "Login / Register"
@@ -12,7 +13,7 @@ ERROR_MESSAGE_ON_NULL_USERNAME = "Please enter a valid username"
 ERROR_MESSAGE_ON_NULL_PASSCODE = "Please set a passcode"
 
 
-class CredentialSubmitter:
+class CredentialSubmitter(Component):
     def __init__(self, submit_login: Callable[[str, Passcode], None]):
         self.submit_login = submit_login
 
@@ -24,8 +25,8 @@ class CredentialSubmitter:
         with ui.card():
             ui.label(TITLE_SECTION_LABEL)
             self.__make_username_input_card()
-            # password_submitter_dropdown(self.__try_submit)
-            PasswordSubmitterWide(on_set_passcode=self.__try_submit)
+            PasswordSubmitterDropdown(self.__try_submit, submit_text="Log in")
+            # PasswordSubmitterWide(on_set_passcode=self.__try_submit, submit_text="Log in")
 
     def __make_username_input_card(self) -> None:
         with ui.card():

@@ -2,7 +2,7 @@ from collections.abc import Callable
 
 from nicegui import ui
 
-from . import Passcode
+from password_manager.types import PasscodeInput, Passcode
 
 MAX_PASSCODE_BYTE_LIMIT = 20
 
@@ -25,16 +25,19 @@ class BitString:
         return self._inner.to_bytes(byteorder="big", length=MAX_PASSCODE_BYTE_LIMIT)
 
 
-def binaryinput_factory(submit_passcode: Callable[[Passcode], None]) -> ui.element:
-    """Just a boring normal text box for testing purposes."""
-    bits = BitString()
+class BinaryInput(PasscodeInput):
+    @staticmethod
+    def get_name() -> str:
+        return "Binary"
 
-    def update_bits_then_submit(bit: bool) -> None:  # noqa: FBT001
-        bits.push(bit)
-        submit_passcode(bits.to_passcode())
+    def __init__(self, on_submit: Callable[[bytes], None], _submit_text: str) -> None:
+        """Binary 0 and 1."""
+        bits = BitString()
 
-    with ui.button_group() as factory:
-        ui.button("0", on_click=lambda: update_bits_then_submit(bit=False))
-        ui.button("1", on_click=lambda: update_bits_then_submit(bit=True))
+        def update_bits_then_submit(bit: bool) -> None:  # noqa: FBT001
+            bits.push(bit)
+            on_submit(bits.to_passcode())
 
-    return factory
+        with ui.button_group():
+            ui.button("0", on_click=lambda: update_bits_then_submit(bit=False))
+            ui.button("1", on_click=lambda: update_bits_then_submit(bit=True))

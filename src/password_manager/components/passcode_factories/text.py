@@ -2,7 +2,7 @@ from collections.abc import Callable
 
 from nicegui import ui
 
-from . import Passcode
+from password_manager.types import PasscodeInput, Passcode
 
 
 def str_to_passcode(s: str) -> Passcode:
@@ -10,10 +10,14 @@ def str_to_passcode(s: str) -> Passcode:
     return s.encode("utf-8")
 
 
-def textinput_factory(submit_passcode: Callable[[Passcode], None]) -> ui.element:
-    """Just a boring normal text box for testing purposes."""
-    return ui.input(
-        label="enter password",
-        # placeholder="start typing",
-        on_change=lambda e: submit_passcode(str_to_passcode(e.value)),
-    )
+class TextInput(PasscodeInput):
+    @staticmethod
+    def get_name() -> str:
+        return "Text"
+
+    def __init__(self, on_submit: Callable[[bytes], None], submit_text: str) -> None:
+        """Just a boring normal text box for testing purposes."""
+        ui.input(
+            label="enter password",
+            on_change=lambda e: on_submit(str_to_passcode(e.value)),
+        )

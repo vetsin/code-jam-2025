@@ -4,16 +4,21 @@ from collections.abc import Callable
 import requests
 from nicegui import ui
 
-from . import Passcode
+from password_manager.types import Passcode, PasscodeInput
+
 
 RANDOM_WORD_API_URL = "https://random-word-api.herokuapp.com/word"
 
 
-class AnagramLock:
-    """Anagram that the user needs to decode."""
+class AnagramLock(PasscodeInput):
+    @staticmethod
+    def get_name() -> str:
+        return "Anagram"
 
-    def __init__(self, submit_passcode: Callable[[Passcode], None]) -> None:
-        self.submit_passcode = submit_passcode
+    def __init__(self, on_submit: Callable[[bytes], None], submit_text: str) -> None:
+        """Anagram that the user needs to decode."""
+
+        self.submit_passcode = on_submit
         # Internals for checking if user entered the correct password
         self.original_word = self._get_random_word()
         self.anagram = self._get_anagram_of_word()
@@ -26,7 +31,7 @@ class AnagramLock:
             with ui.row(), ui.card():
                 ui.input(label="Answer:", on_change=lambda e: self._update_user_input(e.value))
 
-        self.unlock_button = ui.button("Unlock", on_click=lambda: self._handle_unlock())
+        self.unlock_button = ui.button(submit_text, on_click=lambda: self._handle_unlock())
 
     def _get_random_word(self) -> str:
         """Uses an API to get a random word with a length between 5 and 7 letters."""
@@ -71,9 +76,3 @@ class AnagramLock:
         """Handles the event of user pressing unlock button."""
         value = self.user_input.encode("utf-8")
         self.submit_passcode(value)
-
-
-def anagraminput_factory(submit_passcode: Callable[[Passcode], None]) -> ui.element:
-    """Anagram puzzle input."""
-    anagram_lock = AnagramLock(submit_passcode)
-    return anagram_lock.unlock_button
