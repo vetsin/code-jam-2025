@@ -10,7 +10,7 @@ We are a 'password manager'. The core data structure for our operation is a Vaul
   * each Vault has 0..N items (each item is a login, item, or thing. "my gmail account" is an item).
     * each item has 1..N fields.
       * a field is a `key:value` pair of an identifying name and its content (like `email:foo@bar.com`)
-        * each value may have a type, e.g. string, password, x509 key, etc.
+        * each value is a string that can be blacked out if it's sensitive information (e.g. passwords)
 * vaults are encrypted at rest
   * encrypted with a key, or `Passcode`
     * `Passcode`s are generated via 'stupid ui elements' -- e.g. anything not currently considered to be good for auth
@@ -40,21 +40,9 @@ dataclass ItemField:
   mut key: str
   mut value: Value
 
-# we're still workshopping what a Value can be.
-# no matter what, keep a hidden field to black out eg passwords.
-# idea 1:
-# use python `type()` to do work on the value
-type Value = Any
-# idea 2:
-# pack in a mimetype
-dataclass Value:
-  mut content: Any
-  mut mimetype: str, or enum, or something.
-# idea 3:
-# just force content to be not binary data.
-# bin data is hard to manipulate ergonomically in ui (eg trying to paste NUL byte D:)
 dataclass Value:
   mut content: str
+  mut hidden: bool  # black out passwords
 ```
 
 ## Diagram of architecture
