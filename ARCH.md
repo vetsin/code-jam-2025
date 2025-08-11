@@ -12,7 +12,7 @@ We are a 'password manager'. The core data structure for our operation is a Vaul
       * a field is a `key:value` pair of an identifying name and its content (like `email:foo@bar.com`)
         * each value is a string that can be blacked out if it's sensitive information (e.g. passwords)
 * vaults are encrypted at rest
-  * encrypted with a key, or `Passcode`
+  * encrypted with a key, with is identifiable by hashing a user-supplied `Passcode`
     * `Passcode`s are generated via 'stupid ui elements' -- e.g. anything not currently considered to be good for auth
   * encryption/decryption is done within the frontend (e.g. within the browser)
 * vaults are saved off to the backend API
