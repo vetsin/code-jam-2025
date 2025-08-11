@@ -37,4 +37,4 @@ Some general rules:
 
 - Follow <https://www.conventionalcommits.org/en/v1.0.0/>.
 - Make all edits to the main branch via pull requests (squash merge).
-  - During the jam, feel free to approve your own PR for the sake of development speed.
+  - Feel free to approve your own PR for the sake of development speed.
