@@ -1,8 +1,7 @@
 from collections.abc import Callable
-from dataclasses import dataclass
-from password_manager.components.login import login
+from password_manager.components.credential_submitter.password_submitter_dropdown import password_submitter_dropdown
+from password_manager.components.credential_submitter.password_submitter_wide import PasswordSubmitterWide
 from password_manager.components.passcode_factories import Passcode
-from password_manager.components.PasscodeInput import PasscodeInput
 from nicegui import ui
 
 SUBMIT_BUTTON_TEXT = "Login | Register"
@@ -13,12 +12,11 @@ ERROR_MESSAGE_ON_NULL_USERNAME = "Please enter a valid username"
 ERROR_MESSAGE_ON_NULL_PASSCODE = "Please set a passcode"
 
 
-class LoginRegister:
+class CredentialSubmitter:
     def __init__(self, submit_login: Callable[[str, Passcode], None]):
         self.submit_login = submit_login
 
         self.username = ""
-        self.passcode = None
 
         self.__make_ui()
 
@@ -26,8 +24,8 @@ class LoginRegister:
         with ui.card():
             ui.label(TITLE_SECTION_LABEL)
             self.__make_username_input_card()
-            PasscodeInput(self.__set_passcode)
-            self.submit_button = ui.button(SUBMIT_BUTTON_TEXT, on_click=self.__on_submit)
+            # password_submitter_dropdown(self.__try_submit)
+            PasswordSubmitterWide(on_set_passcode=self.__try_submit)
 
     def __make_username_input_card(self) -> None:
         with ui.card():
@@ -38,20 +36,12 @@ class LoginRegister:
             )
 
     def __set_username(self, new_username: str) -> None:
-        """This exists because the ui was being buggy with assignment in a lambda."""
+        """This exists because can't do assignment in a lambda."""
         self.username = new_username
 
-    def __set_passcode(self, new_passcode: Passcode) -> None:
-        """This exists to work with the factory system."""
-        self.passcode = new_passcode
-
-    def __on_submit(self) -> None:
+    def __try_submit(self, p: Passcode) -> None:
         if not self.username:
             ui.notify(ERROR_MESSAGE_ON_NULL_USERNAME, color="negative")
             return
 
-        if self.passcode == None:
-            ui.notify(ERROR_MESSAGE_ON_NULL_PASSCODE, color="negative")
-            return
-
-        self.submit_login(self.username, self.passcode)
+        self.submit_login(self.username, p)
