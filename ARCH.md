@@ -1,17 +1,51 @@
 # Loose architecture
 
-We are a 'password manager', wherein:
+We are a 'password manager'. The core data structure for our operation is a Vault that users use to manage passwords. Our backend must handle multiple Vaults.
+
+## Description in English
 
 * things are stored in a Vault
-  * each Vault has 0..N items
-    * each item has 1..N key:value pairs
-      * each value may have a type, e.g. string, password, x509 key, etc.
+  * Vaults are associated with people (represented by UUIDs)
+  * Vaults have an editable username and passcode (i.e. username not tied to UUID.)
+  * each Vault has 0..N items (each item is a login, item, or thing. "my gmail account" is an item).
+    * each item has 1..N fields.
+      * a field is a `key:value` pair of an identifying name and its content (like `email:foo@bar.com`)
+        * each value may have a type, e.g. string, password, x509 key, etc.
 * vaults are encrypted at rest
-  * encrypted with a key
-    * keys are generated via 'stupid ui elements' -- e.g. anything not currently considered to be good for auth
+  * encrypted with a key, or `Passcode`
+    * `Passcode`s are generated via 'stupid ui elements' -- e.g. anything not currently considered to be good for auth
   * encryption/decryption is done within the frontend (e.g. within the browser)
 * vaults are saved off to the backend API
   * this may be a REST service, or even just localstorage or the local file system for the MVP
+
+## Pseudocode specification of data structures
+
+This must be the definitive specification. If implementations or other descriptions (like in English, above) differ, they or this should be fixed.
+
+```
+dataclass Backend:
+  mut data: set[Vault]
+
+dataclass Vault:
+  const uuid: uint_128
+  mut username: str
+  mut passcode: Passcode  # see password_manager/components/passcode_factories/__init__.py
+  mut vault_data: list[VaultItem]
+
+dataclass VaultItem:
+  mut item_name: str
+  mut item_fields: nonempty_list[ItemField]
+
+dataclass ItemField:
+  mut key: str
+  mut value: Value
+
+dataclass Value: # workshopping
+  mut hidden: bool
+  mut content: str
+```
+
+## Diagram of architecture
 
 ```mermaid
 flowchart TD
