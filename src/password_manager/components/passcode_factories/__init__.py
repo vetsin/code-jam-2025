@@ -8,13 +8,9 @@ from collections.abc import Callable
 
 import nicegui
 
-__all__ = [
-    "PasscodeInputFactory",
-]
 
 type Passcode = bytes
 
-# TODO: does it make more sense to define what a passcode element is here, or where we use it?
 type PasscodeInputFactory = Callable[[Callable[[Passcode], None]], nicegui.ui.element]
 """A function that creates a passcode input.
 
@@ -22,3 +18,21 @@ It must take the argument `submit_passcode: Callable[[Passcode], None]`.
 It must return a nicegui element that calls `submit_passcode` every passcode input.
 The user of this passcode input decides whether it succeeded or failed.
 """
+
+
+from password_manager.components.passcode_factories.anagram import anagraminput_factory
+from password_manager.components.passcode_factories.binary import binaryinput_factory
+from password_manager.components.passcode_factories.map import map_input_factory
+from password_manager.components.passcode_factories.text import textinput_factory
+from password_manager.components.passcode_factories.typst import typstinput_factory
+from password_manager.components.passcode_factories.snake import snakeinput_factory
+
+ALL_FACTORIES: list[tuple[str, PasscodeInputFactory]] = [
+    ("Anagram", anagraminput_factory),
+    ("Binary", binaryinput_factory),
+    ("Map", map_input_factory),
+    ("Text", textinput_factory),
+    ("Typst", typstinput_factory),
+    ("Snake", snakeinput_factory),
+]
+"""All factories with an identifying name."""

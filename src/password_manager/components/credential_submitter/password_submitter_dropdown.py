@@ -2,16 +2,10 @@ from collections.abc import Callable
 
 from nicegui import ui
 
-from password_manager.components.passcode_factories import Passcode, PasscodeInputFactory
-from password_manager.components.passcode_factories.anagram import anagraminput_factory
-from password_manager.components.passcode_factories.binary import binaryinput_factory
-from password_manager.components.passcode_factories.map import map_input_factory
-from password_manager.components.passcode_factories.snake import snakeinput_factory
-from password_manager.components.passcode_factories.text import textinput_factory
-from password_manager.components.passcode_factories.typst import typstinput_factory
+from password_manager.components.passcode_factories import ALL_FACTORIES, Passcode, PasscodeInputFactory
 
 
-def login(submit_passcode: Callable[[Passcode], None]) -> ui.element:
+def password_submitter_dropdown(submit_passcode: Callable[[Passcode], None]) -> ui.element:
     """Component for logging in.
 
     - We have a dropdown to select passcode inputs from `passcode_factories`.
@@ -22,7 +16,7 @@ def login(submit_passcode: Callable[[Passcode], None]) -> ui.element:
     - Like the individual inputs, we defer the decision on whether an input succeeded or failed
       to our caller. To do so, we forward our `submit_passcode` function into the spawned input.
     """
-    with ui.column() as login, ui.dropdown_button("Open me!", auto_close=True) as dropdown:
+    with ui.column() as login, ui.dropdown_button("passcode type", auto_close=True) as dropdown:
 
         def _add(elem: Callable[[], ui.element]) -> None:
             """Spawn an element into login wrapped in a closable card."""
@@ -41,12 +35,7 @@ def login(submit_passcode: Callable[[Passcode], None]) -> ui.element:
             with dropdown:
                 ui.item(name, on_click=lambda: _add(elem=lambda: spawn_pcode_input(submit_passcode)))
 
-        _spawn_new_passcode_as_item("Text Input", textinput_factory, submit_passcode)
-        _spawn_new_passcode_as_item("Binary Input", binaryinput_factory, submit_passcode)
-        _spawn_new_passcode_as_item("Typst Input", typstinput_factory, submit_passcode)
-        _spawn_new_passcode_as_item("Map Input", map_input_factory, submit_passcode)
-        _spawn_new_passcode_as_item("Snake Input", snakeinput_factory, submit_passcode)
-        _spawn_new_passcode_as_item("Anagram Input", anagraminput_factory, submit_passcode)
-        # spawn more input types as we code them
+        for name, factory in ALL_FACTORIES:
+            _spawn_new_passcode_as_item(name, factory, submit_passcode)
 
     return login

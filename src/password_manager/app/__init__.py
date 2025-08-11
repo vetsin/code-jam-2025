@@ -7,8 +7,8 @@ import logging
 
 from nicegui import ui
 
-from password_manager.components import login
-from password_manager.components.login_register.LoginRegister import LoginRegister
+from password_manager.components.credential_submitter.credential_submitter import CredentialSubmitter
+from password_manager.components.credential_submitter.password_submitter_wide import PasswordSubmitterWide
 from password_manager.components.passcode_factories import Passcode
 
 logger = logging.getLogger()
@@ -29,7 +29,7 @@ def index() -> None:
     login_container = ui.column().classes("self-center")
 
     with login_container as app:
-        LoginRegister(on_login_submit)
+        CredentialSubmitter(on_login_submit)
 
     # return app
 
