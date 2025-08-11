@@ -40,8 +40,20 @@ dataclass ItemField:
   mut key: str
   mut value: Value
 
-dataclass Value: # workshopping
-  mut hidden: bool
+# we're still workshopping what a Value can be.
+# no matter what, keep a hidden field to black out eg passwords.
+# idea 1:
+# use python `type()` to do work on the value
+type Value = Any
+# idea 2:
+# pack in a mimetype
+dataclass Value:
+  mut content: Any
+  mut mimetype: str, or enum, or something.
+# idea 3:
+# just force content to be not binary data.
+# bin data is hard to manipulate ergonomically in ui (eg trying to paste NUL byte D:)
+dataclass Value:
   mut content: str
 ```
 
