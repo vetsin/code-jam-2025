@@ -10,6 +10,7 @@ src/
 └── password_manager/
     ├── app/
     ├── components/
+    ├── types/
     └── util/
 ```
 
@@ -17,6 +18,7 @@ The layout for the frontend code takes inspiration from [bulletproof-react](http
 
 - `app/` is responsible for the `app.app()` that spawns the entire nicegui application, and is used for the very small `main.py`.
 - `components/` are generally any self-contained element that can be used elsewhere.
+- `types/` provides important types used throughout the application.
 - `util/` provides utility functions like `todo()`, which assists type checking during development.
 
 > [!NOTE]

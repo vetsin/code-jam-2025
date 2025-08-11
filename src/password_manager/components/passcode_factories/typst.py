@@ -4,7 +4,7 @@ from collections.abc import Callable
 
 from nicegui import run, ui
 
-from . import Passcode
+from password_manager.types import PasscodeInput, Passcode
 
 
 def str_to_passcode(s: str) -> Passcode:
@@ -12,35 +12,38 @@ def str_to_passcode(s: str) -> Passcode:
     return s.encode("utf-8")
 
 
-def typstinput_factory(submit_passcode: Callable[[Passcode], None]) -> ui.element:
-    """Typst input."""
-    with ui.column() as typstinput:
-        ui.codemirror(on_change=lambda e: _render_and_submit_passcode(e.value)).classes("w-64")
-        svg = ui.html("")
+class TypstInput(PasscodeInput):
+    @staticmethod
+    def get_name() -> str:
+        return "Typst"
 
-        async def _render_and_submit_passcode(code: str) -> None:
-            result = await run.cpu_bound(
-                functools.partial(
-                    subprocess.run,
-                    [
-                        "typst",
-                        "compile",
-                        "-",
-                        "-",
-                        "-f",
-                        "svg",
-                    ],
-                    capture_output=True,
-                    input=bytes("#set page(width: auto, height: auto, margin: 1em)\n" + code, "utf-8"),
-                ),
-            )
-            try:
-                result.check_returncode()
-                output: bytes = result.stdout  # type: ignore  # mypy doesn't detect this correctly  # noqa: PGH003
+    def __init__(self, on_submit: Callable[[bytes], None], submit_text: str) -> None:
+        """Typst input."""
+        with ui.column() as typstinput:
+            ui.codemirror(on_change=lambda e: _render_and_submit_passcode(e.value)).classes("w-64")
+            svg = ui.html("")
 
-                svg.set_content(output.decode("utf-8"))
-                submit_passcode(output)
-            except subprocess.CalledProcessError:
-                print("typst errored")
+            async def _render_and_submit_passcode(code: str) -> None:
+                result = await run.cpu_bound(
+                    functools.partial(
+                        subprocess.run,
+                        [
+                            "typst",
+                            "compile",
+                            "-",
+                            "-",
+                            "-f",
+                            "svg",
+                        ],
+                        capture_output=True,
+                        input=bytes("#set page(width: auto, height: auto, margin: 1em)\n" + code, "utf-8"),
+                    ),
+                )
+                try:
+                    result.check_returncode()
+                    output: bytes = result.stdout  # type: ignore  # mypy doesn't detect this correctly  # noqa: PGH003
 
-    return typstinput
+                    svg.set_content(output.decode("utf-8"))
+                    on_submit(output)
+                except subprocess.CalledProcessError:
+                    print("typst errored")

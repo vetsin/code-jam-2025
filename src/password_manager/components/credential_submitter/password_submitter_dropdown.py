@@ -2,40 +2,45 @@ from collections.abc import Callable
 
 from nicegui import ui
 
-from password_manager.components.passcode_factories import ALL_FACTORIES, Passcode, PasscodeInputFactory
+from password_manager.components.passcode_factories import ALL_PASSCODE_INPUTS
+from password_manager.types import Component, Passcode, PasscodeInput
 
 
-def password_submitter_dropdown(submit_passcode: Callable[[Passcode], None]) -> ui.element:
-    """Component for logging in.
+class PasscodeItem(Component):
+    def __init__(
+        self,
+        passcode_input: type[PasscodeInput],
+        on_submit: Callable[[Passcode], None],
+        submit_text: str,
+        passcode_input_parent: ui.element,
+    ):
+        """Spawn a named item representing a passcode input.
 
-    - We have a dropdown to select passcode inputs from `passcode_factories`.
-    - When we select an input type from the dropdown, we spawn the corresponding passcode input.
-    - Multiple inputs can be active at a time.
-        - If we don't like this, we might refactor so that only one input is active at a time.
-          If another is selected, we despawn the old input before spawning the new input.
-    - Like the individual inputs, we defer the decision on whether an input succeeded or failed
-      to our caller. To do so, we forward our `submit_passcode` function into the spawned input.
-    """
-    with ui.column() as login, ui.dropdown_button("passcode type", auto_close=True) as dropdown:
+        It creates a new passcode input in `passcode_input_parent` on select.
+        """
 
-        def _add(elem: Callable[[], ui.element]) -> None:
-            """Spawn an element into login wrapped in a closable card."""
-            with login, ui.card() as card, ui.row().classes("w-full justify-between items-center mb-2"):
-                elem()
+        def spawn_passcode_into_dropdown() -> None:
+            """Spawn the passcode into the given parent, wrapped in a closable card."""
+            with (
+                passcode_input_parent,
+                ui.card() as card,
+                ui.row().classes("w-full justify-between items-center mb-2"),
+            ):
+                passcode_input(on_submit, submit_text)
                 ui.button(icon="close", on_click=lambda: card.delete()).props("flat round size=sm").classes(
                     "text-gray-500 hover:text-gray-700",
                 )
 
-        def _spawn_new_passcode_as_item(
-            name: str,
-            spawn_pcode_input: PasscodeInputFactory,
-            submit_passcode: Callable[[Passcode], None],
-        ) -> None:
-            """Spawn a passcode as a named item into the dropdown. It should create a new passcode on select."""
-            with dropdown:
-                ui.item(name, on_click=lambda: _add(elem=lambda: spawn_pcode_input(submit_passcode)))
+        ui.item(passcode_input.get_name(), on_click=spawn_passcode_into_dropdown)
 
-        for name, factory in ALL_FACTORIES:
-            _spawn_new_passcode_as_item(name, factory, submit_passcode)
 
-    return login
+class PasswordSubmitterDropdown(Component):
+    def __init__(self, on_submit: Callable[[Passcode], None], submit_text: str) -> None:
+        with ui.column() as login, ui.dropdown_button("passcode type", auto_close=True) as _dropdown:
+            for passcode_input in ALL_PASSCODE_INPUTS:
+                PasscodeItem(
+                    passcode_input,
+                    on_submit,
+                    submit_text,
+                    passcode_input_parent=login,
+                )

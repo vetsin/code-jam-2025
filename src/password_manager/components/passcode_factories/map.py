@@ -3,16 +3,20 @@ from struct import pack
 
 from nicegui import events, ui
 
-from . import Passcode
+from password_manager.types import PasscodeInput, Passcode
+
 
 MARKER_AT_ZERO_ERROR = "Marker cannot be at 0x0"
 
 
-class MapLock:
-    """See https://github.com/vetsin/code-jam-2025/issues/6."""
+class MapLock(PasscodeInput):
+    @staticmethod
+    def get_name() -> str:
+        return "Map"
 
-    def __init__(self, submit_passcode: Callable[[Passcode], None]) -> None:
-        self.submit_passcode = submit_passcode
+    def __init__(self, on_submit: Callable[[bytes], None], submit_text: str) -> None:
+        """See https://github.com/vetsin/code-jam-2025/issues/6."""
+        self.submit_passcode = on_submit
 
         self.map = ui.leaflet(center=(51.505, -0.090), zoom=3)
         self.map.on("map-click", self.__on_map_input)
@@ -21,7 +25,7 @@ class MapLock:
         self.latitude = 0
         self.longitude = 0
 
-        self.unlock_button = ui.button("Unlock", on_click=lambda: self.__handle_unlock())
+        self.unlock_button = ui.button(submit_text, on_click=lambda: self.__handle_unlock())
 
     def __handle_unlock(self) -> None:
         try:
@@ -42,9 +46,3 @@ class MapLock:
         if self.latitude == 0 and self.longitude == 0:
             raise ValueError(MARKER_AT_ZERO_ERROR)
         return pack(">ff", self.latitude, self.longitude)
-
-
-def map_input_factory(submit_passcode: Callable[[Passcode], None]) -> ui.element:
-    """Factory for map input."""
-    map_lock = MapLock(submit_passcode)
-    return map_lock.unlock_button

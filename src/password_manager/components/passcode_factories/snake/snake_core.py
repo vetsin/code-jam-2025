@@ -9,11 +9,10 @@ from typing import TYPE_CHECKING
 from nicegui import ui
 
 from password_manager.components.passcode_factories.snake.vec2 import Vec2
+from password_manager.types import PasscodeInput, Passcode
 
 if TYPE_CHECKING:
     from collections.abc import Callable
-
-    from password_manager.components.passcode_factories import Passcode
 
 
 class Direction(IntEnum):
@@ -284,46 +283,49 @@ class Snake:
         return self.moves_as_bytes()
 
 
-def snakeinput_factory(submit_passcode: Callable[[Passcode], None]) -> ui.element:
-    """Snake."""
-    snake = Snake(size=4, start=((2, 2)), direction=Direction.UP, seed="TEMP, expose this as arg to user?")
+class SnakeInput(PasscodeInput):
+    @staticmethod
+    def get_name() -> str:
+        return "Snake"
 
-    with ui.column() as snakeinput:
-        # https://fsymbols.com/signs/arrow/ copy pasted unicode from here
-        with ui.button_group():
-            ui.button("🡸", on_click=lambda: snake.change_direction(Direction.LEFT))
-            ui.button("🡻", on_click=lambda: snake.change_direction(Direction.DOWN))
-            ui.button("🡹", on_click=lambda: snake.change_direction(Direction.UP))
-            ui.button("🡺", on_click=lambda: snake.change_direction(Direction.RIGHT))
+    def __init__(self, on_submit: Callable[[bytes], None], _submit_text: str) -> None:
+        """Snake."""
+        snake = Snake(size=4, start=((2, 2)), direction=Direction.UP, seed="TEMP, expose this as arg to user?")
 
-        map = ui.code()
+        with ui.column() as snakeinput:
+            # https://fsymbols.com/signs/arrow/ copy pasted unicode from here
+            with ui.button_group():
+                ui.button("🡸", on_click=lambda: snake.change_direction(Direction.LEFT))
+                ui.button("🡻", on_click=lambda: snake.change_direction(Direction.DOWN))
+                ui.button("🡹", on_click=lambda: snake.change_direction(Direction.UP))
+                ui.button("🡺", on_click=lambda: snake.change_direction(Direction.RIGHT))
 
-    # TICK_INTERVAL = 0.7  # noqa: N806
-    TICK_INTERVAL = 1  # noqa: N806
-    """Time between snake ticks"""
-    WAIT_INTERVAL = 2.5  # noqa: N806
-    """Time between games when player died."""
+            map = ui.code()
 
-    # we use this list as an address, basically. because python doesn't have address-of.
-    # we assert it always has exactly one item.
-    timer: list[ui.timer] = []
+        # TICK_INTERVAL = 0.7  # noqa: N806
+        TICK_INTERVAL = 1  # noqa: N806
+        """Time between snake ticks"""
+        WAIT_INTERVAL = 2.5  # noqa: N806
+        """Time between games when player died."""
 
-    def tick_and_submit() -> None:
-        """Tick game, submit and reset game if it ended."""
-        game_end = snake.tick()
-        map.set_content(snake.map_as_str())
-        if game_end:
-            submit_passcode(snake.moves_as_passcode())
-            assert len(timer) == 1  # noqa: S101
-            timer[0].cancel()
-            timer.pop()
-            snake.reset()
-            ui.timer(
-                interval=WAIT_INTERVAL,
-                callback=lambda: timer.append(ui.timer(interval=TICK_INTERVAL, callback=tick_and_submit)),
-                once=True,
-            )
+        # we use this list as an address, basically. because python doesn't have address-of.
+        # we assert it always has exactly one item.
+        timer: list[ui.timer] = []
 
-    timer.append(ui.timer(interval=TICK_INTERVAL, callback=tick_and_submit))
+        def tick_and_submit() -> None:
+            """Tick game, submit and reset game if it ended."""
+            game_end = snake.tick()
+            map.set_content(snake.map_as_str())
+            if game_end:
+                on_submit(snake.moves_as_passcode())
+                assert len(timer) == 1  # noqa: S101
+                timer[0].cancel()
+                timer.pop()
+                snake.reset()
+                ui.timer(
+                    interval=WAIT_INTERVAL,
+                    callback=lambda: timer.append(ui.timer(interval=TICK_INTERVAL, callback=tick_and_submit)),
+                    once=True,
+                )
 
-    return snakeinput
+        timer.append(ui.timer(interval=TICK_INTERVAL, callback=tick_and_submit))
