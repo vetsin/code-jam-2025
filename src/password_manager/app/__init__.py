@@ -9,6 +9,16 @@ from nicegui import ui
 
 from password_manager.components.credential_submitter.credential_submitter import CredentialSubmitter
 from password_manager.components.credential_submitter.password_submitter_wide import PasswordSubmitterWide
+from password_manager.components.vault_view.vault_view import VaultView
+from password_manager.components.vault import Vault, VaultEntry, VaultKeyValue
+
+TITLE_SECTION_LABEL = "Vault"
+
+mockVault = Vault()
+mockEntry = VaultEntry("Mock Entry")
+mockKeyValue = VaultKeyValue("Test", 111)
+mockEntry.add_key_value(mockKeyValue)
+mockVault.add_entry(mockEntry)
 from password_manager.types import Passcode
 
 logger = logging.getLogger()
@@ -30,7 +40,7 @@ def index() -> None:
 
     with login_container as app:
         CredentialSubmitter(on_login_submit)
-
+        VaultView(mockVault)
     # return app
 
 
