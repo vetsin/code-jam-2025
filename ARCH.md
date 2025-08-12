@@ -75,4 +75,4 @@ flowchart TD
 
 ## Frontend Architecture
 
-[diagram of frontend architecture as an svg](./arch_frontend.svg)
+![diagram of frontend architecture as an svg](./arch_frontend.svg)
