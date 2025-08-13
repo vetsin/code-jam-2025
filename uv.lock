@@ -604,6 +604,7 @@ dependencies = [
     { name = "fastapi" },
     { name = "filelock" },
     { name = "nicegui" },
+    { name = "platformdirs" },
     { name = "pydantic" },
 ]
 
@@ -624,6 +625,7 @@ requires-dist = [
     { name = "fastapi", specifier = ">=0.116.1" },
     { name = "filelock", specifier = ">=3.18.0" },
     { name = "nicegui", specifier = ">=2.22.1" },
+    { name = "platformdirs", specifier = ">=4.3.8" },
     { name = "pydantic", specifier = ">=2.11.7" },
 ]
 
