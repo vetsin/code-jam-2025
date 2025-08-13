@@ -18,10 +18,9 @@ storage = FileStorage()
 class SubPages(ui.sub_pages):
     def _render_page(self, match: RouteMatch) -> bool:
         if self._is_registering():
-            if match.path not in ["/register", "/logout"]:
-                self._reset_match()
-                ui.navigate.to("/register")
-                return True
+            self.clear()
+            create_vault_page(storage)
+            return True
         if not self._has_vault():
             load_vault_page(storage)
             return True
@@ -67,7 +66,10 @@ class SubPages(ui.sub_pages):
 @ui.page("/")
 @ui.page("/{_:path}")
 def render(client: Client) -> None:
+    # https://nicegui.io/documentation/sub_pages
     SubPages(
         {"/": home_page, "/unlock": unlock_page, "/register": create_vault_page, "/logout": clear_vault_session},
         data={"storage": storage},
     )
+    with ui.header().classes("item-center"):
+        ui.markdown(f"debugging header: `app.storage.user={json.dumps(app.storage.user)}`")

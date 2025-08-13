@@ -4,7 +4,7 @@ from nicegui import app, ui
 
 from password_manager.backend.database import VaultStorage
 from password_manager.components.credential_submitter.credential_submitter import CredentialSubmitter
-from password_manager.components.passcode_factories import Passcode
+from password_manager.types import Passcode
 
 logger = logging.Logger("pages")
 
@@ -76,12 +76,10 @@ def unlock_page(storage: VaultStorage) -> None:
 
     with ui.column().classes("self-center"):
         CredentialSubmitter(temp_submit_passcode_check)
-    ui.markdown(f"""```{json.dumps(app.storage.user)}```""")
 
 
 def home_page(storage: VaultStorage) -> None:
     clear_vault_session()
     ui.markdown(f"""
     hello world we would vault stuff here\n
-    ```{json.dumps(app.storage.user)}```
                 """)
