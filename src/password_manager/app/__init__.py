@@ -64,7 +64,6 @@ class SubPages(ui.sub_pages):
 
 
 @ui.page("/")
-@ui.page("/{_:path}")
 def render(client: Client) -> None:
     # https://nicegui.io/documentation/sub_pages
     SubPages(
