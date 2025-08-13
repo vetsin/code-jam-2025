@@ -3,6 +3,7 @@ import secrets
 from abc import ABC, abstractmethod
 from collections.abc import Generator
 from pathlib import Path
+import platformdirs
 from pydantic import BaseModel
 from cryptography.exceptions import InvalidSignature
 
@@ -47,10 +48,15 @@ class VaultStorage(ABC):
 class FileStorage(VaultStorage):
     """Just store to filesystem"""
 
-    def __init__(self, base_path: str = "~/.config/password-jam"):
+    def __init__(
+        self,
+        base_path: str = platformdirs.user_config_dir(
+            appname="password-jam", appauthor="password-jam", version="0.0.0-indev"
+        ),
+    ):
         self._base = Path(base_path).expanduser()
         if not Path.exists(self._base):
-            Path.mkdir(self._base)
+            Path.mkdir(self._base, parents=True)
 
     def read(self, vault_id: str) -> ServerSideVault:
         """Return the vault, or raise"""
