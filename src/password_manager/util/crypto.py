@@ -7,8 +7,6 @@ from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
 from cryptography.hazmat.primitives.hmac import HMAC
 
-from password_manager.util import todo
-
 
 class UnlockKey(ABC):
     """Abstract base class that defines what an unlock key is."""
@@ -19,7 +17,7 @@ class UnlockKey(ABC):
 
         This method should be implemented by subclasses to provide specific key generation logic.
         """
-        todo()
+        raise NotImplementedError("needs an impl")
 
 
 class SimpleUnlockKey(UnlockKey):

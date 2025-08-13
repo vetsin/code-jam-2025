@@ -8,9 +8,14 @@ from password_manager.util.exceptions import VaultReadError, VaultSaveError, Vau
 router = APIRouter(prefix="/api")
 logger = logging.getLogger()
 
-@router.get('/health')
+# after some understanding of how nicegui works, none of this is useful, but there's no real reason to remove it
+# to that point, nicegui is the wrong tool for a password manager :)
+
+
+@router.get("/health")
 async def get_health() -> dict[str, str]:
-    return {'status': 'ok'}
+    return {"status": "ok"}
+
 
 @router.get("/vaults/{vault_id}", status_code=status.HTTP_200_OK)
 async def load_vault(vault_id: str, storage: get_vault_storage = Depends()) -> Response:
@@ -20,6 +25,7 @@ async def load_vault(vault_id: str, storage: get_vault_storage = Depends()) -> R
     except VaultReadError as e:
         logger.error("Failed to read vault: {%s}", e)
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND) from e
+
 
 @router.patch("/vaults/{vault_id}", status_code=status.HTTP_200_OK)
 async def save_vault(request: Request, vault_id: str, storage: get_vault_storage = Depends()) -> None:
@@ -33,6 +39,7 @@ async def save_vault(request: Request, vault_id: str, storage: get_vault_storage
     except VaultSaveError as e:
         logger.error("Failed to write vault: {%s}", e)
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR) from e
+
 
 @router.post("/vaults/{vault_id}", status_code=status.HTTP_201_CREATED)
 async def new_vault(vault_id: str, storage: get_vault_storage = Depends()) -> ServerSideVault:

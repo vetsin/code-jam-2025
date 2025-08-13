@@ -8,10 +8,7 @@ from password_manager.app import api
 fastapi_app = FastAPI()
 fastapi_app.include_router(api.router)
 
-ui.run_with(
-    fastapi_app,
-    # storage_secret='todo'
-)
+ui.run_with(fastapi_app, storage_secret="todo, a real secret")
 
 # if __name__ in {"__main__", "__mp_main__"}:
 if __name__ == "__main__":
