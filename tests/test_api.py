@@ -71,11 +71,3 @@ class TestAPI(TestCase):
                 (base / "test-vault.secret").unlink()
             except:
                 pass
-
-
-
-
-
-    
-
-
