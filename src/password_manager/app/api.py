@@ -1,24 +1,48 @@
-from fastapi import APIRouter, Depends, Request, Response
+import logging
+from fastapi import APIRouter, Depends, Request, Response, status, HTTPException
+from pydantic import BaseModel
 
-from ..backend.database import get_vault_storage
+from password_manager.backend.database import ServerSideVault, get_vault_storage
+from password_manager.util.exceptions import VaultReadError, VaultSaveError, VaultValidationError
 
 router = APIRouter(prefix="/api")
+logger = logging.getLogger()
+
+# after some understanding of how nicegui works, none of this is useful, but there's no real reason to remove it
+# to that point, nicegui is the wrong tool for a password manager :)
 
 
-@router.get("/vaults/{vault_id}")
+@router.get("/health")
+async def get_health() -> dict[str, str]:
+    return {"status": "ok"}
+
+
+@router.get("/vaults/{vault_id}", status_code=status.HTTP_200_OK)
 async def load_vault(vault_id: str, storage: get_vault_storage = Depends()) -> Response:
-    return Response(content=storage.read(vault_id), media_type="binary/octet")
-    # return VaultService(storage).load_vault(vault_id)
+    try:
+        server_vault: ServerSideVault = storage.read(vault_id)
+        return Response(content=server_vault.vault_data, media_type="binary/octet")
+    except VaultReadError as e:
+        logger.error("Failed to read vault: {%s}", e)
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND) from e
 
 
-@router.post("/vaults/{vault_id}")
-async def save_vault(request: Request, vault_id: str, storage: get_vault_storage = Depends()) -> dict[str, bool]:
-    # body = await request.body()
-    # TODO: validate we *can* write it...
-    # likely we will have it signed and validate that they wrote it... somehow...
-    # https://en.wikipedia.org/wiki/Zero-knowledge_proof
-    # we will likely need to store a secret server-side on first-write
-    # alternatively we ensure that every vault has an internal randomly generated
-    # private key we can use for challenge-response?
-    return {"success": False}
-    # return VaultService(storage).load_vault(vault_id)
+@router.patch("/vaults/{vault_id}", status_code=status.HTTP_200_OK)
+async def save_vault(request: Request, vault_id: str, storage: get_vault_storage = Depends()) -> None:
+    try:
+        # should throw if signature is invalid
+        storage.write(vault_id, await request.body())
+    except VaultReadError as e:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND) from e
+    except VaultValidationError as e:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED) from e
+    except VaultSaveError as e:
+        logger.error("Failed to write vault: {%s}", e)
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR) from e
+
+
+@router.post("/vaults/{vault_id}", status_code=status.HTTP_201_CREATED)
+async def new_vault(vault_id: str, storage: get_vault_storage = Depends()) -> ServerSideVault:
+    if storage.exists(vault_id):
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Vault already exists")
+    return storage.create(vault_id)

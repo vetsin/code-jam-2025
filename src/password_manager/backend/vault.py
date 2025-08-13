@@ -3,7 +3,7 @@ from datetime import UTC, datetime
 from typing import Any
 from uuid import uuid4
 
-from . import crypto
+from password_manager.util import crypto
 
 
 class VaultKeyValue:
@@ -74,6 +74,8 @@ class Vault:
         self.__id = str(uuid4())
         self._created = datetime.now(UTC)
         self.entries: list[VaultEntry] = []
+        # static secret given to us by the server, upon creation -- for validating identity
+        self.vault_secret: str = None
 
     @property
     def id(self) -> str:
