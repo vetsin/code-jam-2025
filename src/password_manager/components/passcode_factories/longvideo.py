@@ -41,22 +41,22 @@ class LongVideoLock(PasscodeInput):
         self.submit_passcode = on_submit
         # Internals for checking if user entered the correct timestamp
         self.correct_timestamps = [
-            Timestamp(0, 20, 16),
-            Timestamp(0, 56, 10),
-            Timestamp(1, 27, 14),
-            Timestamp(1, 57, 28),
-            Timestamp(2, 16, 52),
-            Timestamp(2, 24, 26),
-            Timestamp(2, 40, 51),
-            Timestamp(3, 7, 7),
-            Timestamp(3, 59, 15),
-            Timestamp(4, 0, 0),
-            Timestamp(4, 59, 50),
-            Timestamp(6, 5, 44),
-            Timestamp(6, 19, 19),
-            Timestamp(6, 28, 43),
-            Timestamp(6, 50, 13),
-            Timestamp(7, 4, 25),
+            Timestamp(0, 20, 16),  # 1
+            Timestamp(0, 56, 10),  # 2
+            Timestamp(1, 27, 14),  # 3
+            Timestamp(1, 57, 28),  # 4
+            Timestamp(2, 16, 52),  # 5
+            Timestamp(2, 24, 26),  # 6
+            Timestamp(2, 40, 51),  # 7
+            Timestamp(3, 7, 7),  # 8
+            Timestamp(3, 59, 15),  # 9
+            Timestamp(4, 0, 0),  # 10
+            Timestamp(4, 59, 50),  # 11
+            Timestamp(6, 5, 44),  # 12
+            Timestamp(6, 19, 19),  # 13
+            Timestamp(6, 28, 43),  # 14
+            Timestamp(6, 50, 13),  # 15
+            Timestamp(7, 4, 25),  # 16
         ]
         self.timestamp_n, self.timestamp_s = self._get_random_timestamp()
         self.user_timestamp = Timestamp(0, 0, 0)
@@ -108,21 +108,24 @@ class LongVideoLock(PasscodeInput):
 
     def _update_user_hour_input(self, new_hour: int) -> None:
         """Update that user input."""
-        self.user_timestamp.hour = int(new_hour)
+        if new_hour:
+            self.user_timestamp.hour = int(new_hour)
 
     def _update_user_minute_input(self, new_minute: int) -> None:
         """Update that user input."""
-        self.user_timestamp.minute = int(new_minute)
+        if new_minute:
+            self.user_timestamp.minute = int(new_minute)
 
     def _update_user_second_input(self, new_second: int) -> None:
         """Update that user input."""
-        self.user_timestamp.second = int(new_second)
+        if new_second:
+            self.user_timestamp.second = int(new_second)
 
     def _handle_unlock(self) -> None:
         """Handles the event of user pressing unlock button."""
         if self.user_timestamp == self.correct_timestamps[self.timestamp_n]:
             # User got it right
-            self.submit_passcode(passcode=bytes([1]))
+            self.submit_passcode(bytes([1]))
         else:
             # User got it wrong
-            self.submit_passcode(passcode=bytes([0]))
+            self.submit_passcode(bytes([0]))

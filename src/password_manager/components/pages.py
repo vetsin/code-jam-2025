@@ -71,8 +71,8 @@ def clear_vault_session() -> None:
 
 
 def unlock_page(storage: VaultStorage) -> None:
-    def temp_submit_passcode_check(p: Passcode) -> None:
-        logger.info(f"we received the passcode {p!r}")
+    def temp_submit_passcode_check(user: str, p: Passcode) -> None:
+        logger.info(f"we received the passcode {p!r} for user: {user}")
 
     with ui.column().classes("self-center"):
         CredentialSubmitter(temp_submit_passcode_check)
