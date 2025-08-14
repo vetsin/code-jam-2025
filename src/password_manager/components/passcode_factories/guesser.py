@@ -91,7 +91,7 @@ class GuesserLock(PasscodeInput):
 
         # Get a random number between 1 and 7, silence the linter warning because this is a game
         num = random.randint(min_number, max_number)  # noqa: S311
-        print(f"Guesser number is {num}")
+        print(f"Guesser number is {num} and color is {self.colors[num]}")
 
         return num
 

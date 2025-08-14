@@ -6,6 +6,7 @@ passcode inputs. All other public members in this module are functions of this t
 
 from password_manager.components.passcode_factories.anagram import AnagramLock
 from password_manager.components.passcode_factories.binary import BinaryInput
+from password_manager.components.passcode_factories.guesser import GuesserLock
 from password_manager.components.passcode_factories.longvideo import LongVideoLock
 from password_manager.components.passcode_factories.map import MapLock
 from password_manager.components.passcode_factories.text import TextInput
@@ -16,6 +17,7 @@ from password_manager.types import PasscodeInput
 ALL_PASSCODE_INPUTS: list[type[PasscodeInput]] = [
     AnagramLock,
     BinaryInput,
+    GuesserLock,
     LongVideoLock,
     MapLock,
     TextInput,
