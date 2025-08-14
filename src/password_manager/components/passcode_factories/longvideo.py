@@ -120,5 +120,9 @@ class LongVideoLock(PasscodeInput):
 
     def _handle_unlock(self) -> None:
         """Handles the event of user pressing unlock button."""
-        passcode = self.user_timestamp.to_passcode()
-        self.submit_passcode(passcode)
+        if self.user_timestamp == self.correct_timestamps[self.timestamp_n]:
+            # User got it right
+            self.submit_passcode(passcode=bytes([1]))
+        else:
+            # User got it wrong
+            self.submit_passcode(passcode=bytes([0]))

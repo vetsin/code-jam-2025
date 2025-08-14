@@ -74,5 +74,9 @@ class AnagramLock(PasscodeInput):
 
     def _handle_unlock(self) -> None:
         """Handles the event of user pressing unlock button."""
-        value = self.user_input.encode("utf-8")
-        self.submit_passcode(value)
+        if self.original_word.lower() == self.user_input.lower():
+            # User got it right
+            self.submit_passcode(passcode=bytes([1]))
+        else:
+            # User got it wrong
+            self.submit_passcode(passcode=bytes([0]))
