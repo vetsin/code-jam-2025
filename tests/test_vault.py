@@ -1,6 +1,8 @@
 from unittest import TestCase
 from cryptography.exceptions import InvalidSignature
-from password_manager.components import crypto, vault
+
+from password_manager.backend import vault
+from password_manager.util import crypto
 
 class TestVault(TestCase):
     def test_basic(self):

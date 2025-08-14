@@ -2,7 +2,8 @@ import pytest
 
 from unittest import TestCase
 from cryptography.exceptions import InvalidSignature
-from password_manager.components import crypto
+
+from password_manager.util import crypto
 
 class TestCrypto(TestCase):
     def test_encrypt_decrypt(self):
