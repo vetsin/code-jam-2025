@@ -70,13 +70,14 @@ class AnagramLock(PasscodeInput):
 
     def _update_user_input(self, new_input: str) -> None:
         """Update that user input."""
-        self.user_input = new_input
+        if new_input:
+            self.user_input = new_input
 
     def _handle_unlock(self) -> None:
         """Handles the event of user pressing unlock button."""
         if self.original_word.lower() == self.user_input.lower():
             # User got it right
-            self.submit_passcode(passcode=bytes([1]))
+            self.submit_passcode(bytes([1]))
         else:
             # User got it wrong
-            self.submit_passcode(passcode=bytes([0]))
+            self.submit_passcode(bytes([0]))
