@@ -4,6 +4,7 @@ from nicegui import ui
 
 from password_manager.components.passcode_factories import ALL_PASSCODE_INPUTS
 from password_manager.types import Component, Passcode, PasscodeInput
+from password_manager.util.crypto import UnlockKey
 
 
 class PasscodeItem(Component):
@@ -35,7 +36,7 @@ class PasscodeItem(Component):
 
 
 class PasswordSubmitterDropdown(Component):
-    def __init__(self, on_submit: Callable[[Passcode], None], submit_text: str) -> None:
+    def __init__(self, on_submit: Callable[[Passcode | UnlockKey], None], submit_text: str) -> None:
         with ui.column() as login, ui.dropdown_button("passcode type", auto_close=True) as _dropdown:
             for passcode_input in ALL_PASSCODE_INPUTS:
                 PasscodeItem(
