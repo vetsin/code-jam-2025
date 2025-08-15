@@ -1,5 +1,6 @@
 from copy import deepcopy
-from typing import Iterable, Iterator, NoReturn, TypeVar
+from dataclasses import dataclass
+from typing import Generic, Iterable, Iterator, NoReturn, TypeVar
 
 
 def todo(msg: str = "") -> NoReturn:
@@ -34,3 +35,10 @@ T = TypeVar("T")
 def dbg(x: T) -> T:
     print(x)
     return x
+
+
+@dataclass
+class Ref(Generic[T]):
+    """An owned reference to a value, or something."""
+
+    inner: T

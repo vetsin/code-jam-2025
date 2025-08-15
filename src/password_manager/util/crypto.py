@@ -1,6 +1,8 @@
+from dataclasses import dataclass
 import hashlib
 import os
 from abc import ABC, abstractmethod
+import time
 
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import hashes
@@ -23,20 +25,41 @@ class UnlockKey(ABC):
 class SimpleUnlockKey(UnlockKey):
     """A 'simple' implementation of UnlockKey."""
 
-    def __init__(self, custom_salt: bytes | None = None, person: bytes = b"vault") -> None:
+    def __init__(
+        self,
+        custom_salt: bytes | None = None,
+        person: bytes = b"vault",
+        with_seed: bytes | None = None,
+    ) -> None:
         self._salt = custom_salt if custom_salt else self.__class__.__name__.encode("utf-8")
         self.__h = hashlib.blake2b(salt=self._salt[: hashlib.blake2b.SALT_SIZE], person=person)
+        if with_seed:
+            self.seed(with_seed)
 
     def seed(self, seed: str | bytes) -> None:
         """Get seed."""
         if not seed:
             raise ValueError("cannot seed with nothing")
-        seed = seed if isinstance(seed, bytes) else str(seed).encode("utf-8")
+        seed = seed if isinstance(seed, bytes) else seed.encode("utf-8")  # type: ignore # type checker too dumb
         self.__h.update(seed)
 
     def generate_key(self) -> bytes:
         """Generate key, should be 512 bits"""
         return self.__h.digest()
+
+
+@dataclass
+class Token:
+    key: UnlockKey
+    created_on: float  # epoch in seconds, from time.time()
+    lifetime_in_secs: float  # marked for deletion after this number of seconds
+
+    def should_invalidate(self) -> bool:
+        """Return whether we should invalidate this token because it's too old.
+
+        Invalidation must be done by its owner. That's `SavedLoginInfo` right now.
+        """
+        return time.time() - self.created_on > self.lifetime_in_secs
 
 
 def encrypt_data(data: bytes, key: UnlockKey) -> bytes:
@@ -58,6 +81,8 @@ def decrypt_data(data: bytes, key: UnlockKey) -> bytes:
     """Validate signature and decrypt data using key.
 
     The data is expected will be [signature][iv][data].
+
+    :raises: cryptography.exceptions.InvalidSignature
     """
     k1 = key.generate_key()
     if len(k1) < 32:
