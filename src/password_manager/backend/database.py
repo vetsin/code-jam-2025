@@ -44,15 +44,18 @@ class VaultStorage(ABC):
         """Exists"""
         raise NotImplementedError
 
+    @abstractmethod
+    def delete(self, vault_id: str) -> None:
+        """Delete the vault"""
+        raise NotImplementedError
+
 
 class FileStorage(VaultStorage):
     """Just store to filesystem"""
 
     def __init__(
         self,
-        base_path: str = platformdirs.user_config_dir(
-            appname="password-jam", appauthor="password-jam", version="0.0.0-indev"
-        ),
+        base_path: str = platformdirs.user_config_dir(appname="password-jam", appauthor="password-jam"),
     ):
         self._base = Path(base_path).expanduser()
         if not Path.exists(self._base):
@@ -80,7 +83,7 @@ class FileStorage(VaultStorage):
         try:
             # read it first, so we can validate the signature...
             vault = self.read(vault_id)
-            data = validate_signature(data, vault.vault_secret.encode("utf-8"))
+            validate_signature(data, vault.vault_secret.encode("utf-8"))
             with FileLock(self._get_path(f"{vault_id}.lock")), Path.open(self._get_path(vault_id), "wb") as f:
                 f.write(data)
         except InvalidSignature as e:
@@ -120,6 +123,12 @@ class FileStorage(VaultStorage):
     def exists(self, path: str) -> bool:
         """if path exists"""
         return self._get_path(path).exists()
+
+    def delete(self, vault_id: str) -> None:
+        if self.exists(vault_id):
+            with FileLock(self._get_path(f"{vault_id}.lock")):
+                self._get_path(vault_id).unlink()
+                self._get_path(f"{vault_id}.secret").unlink()
 
     def _get_path(self, path: Path) -> Path:
         """protect against directory traversals, aka ensure we are always under our dir"""
