@@ -156,8 +156,12 @@ def unlock_page(storage: VaultStorage) -> None:
         if not ssv:
             ui.notify("Vault does not exist", color="negative")
             return
-        unsigned_encrypted_vault = crypto.validate_signature(ssv.vault_data, ssv.vault_secret.encode("utf-8"))
-        decrypted_vault = vault.decrypt_vault(unsigned_encrypted_vault, p)
+        try:
+            unsigned_encrypted_vault = crypto.validate_signature(ssv.vault_data, ssv.vault_secret.encode("utf-8"))
+            decrypted_vault = vault.decrypt_vault(unsigned_encrypted_vault, p)
+        except:
+            ui.notify("incorrect passcode", type="negative")
+            return
         ui.notify("Vault unlocked successfully", color="positive")
         app.storage.user["vault_secret"] = decrypted_vault.vault_secret
         # THIS FAILS -- need to figure out the data binding stuff for objects
