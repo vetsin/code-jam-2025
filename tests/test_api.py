@@ -2,8 +2,9 @@ from unittest import TestCase
 from fastapi.testclient import TestClient
 
 import main
+from password_manager.backend import vault
 from password_manager.backend.database import get_vault_storage
-from password_manager.components import crypto, vault
+from password_manager.util import crypto
 
 class TestAPI(TestCase):
     def setUp(self):
