@@ -40,14 +40,16 @@ def load_vault_page(storage: VaultStorage) -> None:
         ui.navigate.to("/register")
 
     with ui.card().classes("absolute-center items-center"):
+        curr_input = ""
         vault_id = (
             ui.input("Vault Identifier", value=app.storage.user.get("vault_id", ""))
             .props("autofocus")
             .on("keydown.enter", try_load)
+            .bind_value(globals(), "curr_input")
         )
         with ui.row().classes("mt-4"):
             ui.button("Register", on_click=start_registering).props("outline")
-            ui.button("Login", on_click=try_load).props("outline")
+            ui.button("Login", on_click=try_load).props("outline").bind_enabled(globals(), "curr_input")
 
 
 def create_vault_page(storage: VaultStorage) -> None:
