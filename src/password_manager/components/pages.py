@@ -35,12 +35,9 @@ def load_vault_page(storage: VaultStorage) -> None:
         else:
             ui.notify("Vault does not exist", color="negative")
 
-    async def try_create() -> None:
-        if storage.exists(str(vault_id.value)):
-            ui.notify("Vault already exists", color="negative")
-        else:
-            app.storage.user["is_registering"] = True
-            ui.navigate.to("/register")
+    async def start_registering() -> None:
+        app.storage.user["is_registering"] = True
+        ui.navigate.to("/register")
 
     with ui.card().classes("absolute-center items-center"):
         vault_id = (
@@ -49,7 +46,7 @@ def load_vault_page(storage: VaultStorage) -> None:
             .on("keydown.enter", try_load)
         )
         with ui.row().classes("mt-4"):
-            ui.button("Register", on_click=try_create).props("outline")
+            ui.button("Register", on_click=start_registering).props("outline")
             ui.button("Login", on_click=try_load).props("outline")
 
 
@@ -95,6 +92,12 @@ def create_vault_page(storage: VaultStorage) -> None:
     with ui.card().classes("absolute-center items-center"):
         with ui.stepper().props("vertical").classes("w-full") as stepper:
 
+            async def stepper_next_if_valid_vid() -> None:
+                if storage.exists(registration_info["vault_id"]):
+                    ui.notify("Vault already exists", color="negative")
+                else:
+                    stepper.next()
+
             def set_div_to_unlocker(event: GenericEventArguments) -> None:
                 passcode_div.clear()
                 with passcode_div:
@@ -108,7 +111,7 @@ def create_vault_page(storage: VaultStorage) -> None:
                     .bind_value_to(registration_info, "vault_id")
                 )
                 with ui.stepper_navigation():
-                    ui.button("Next", on_click=stepper.next).bind_enabled(registration_info, "vault_id")
+                    ui.button("Next", on_click=stepper_next_if_valid_vid).bind_enabled(registration_info, "vault_id")
 
             with ui.step("Step 2: Vault Unlock Method"):
                 ui.label("Choose how you want to unlock your vault:")
