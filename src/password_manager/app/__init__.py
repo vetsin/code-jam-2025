@@ -51,5 +51,6 @@ def render(client: Client) -> None:
         },
         data={"storage": storage},
     )
-    with ui.header().classes("item-center"):
-        ui.markdown(f"debugging header: `app.storage.user={json.dumps(app.storage.user)}`")
+    # TypeError: Object of type Vault is not JSON serializable, on reload after unlocking vault
+    # with ui.header().classes("item-center"):
+    #     ui.markdown(f"debugging header: `app.storage.user={json.dumps(app.storage.user)}`")
