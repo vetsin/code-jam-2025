@@ -95,7 +95,8 @@ def create_vault_page(storage: VaultStorage) -> None:
     with ui.card().classes("absolute-center items-center"):
         with ui.stepper().props("vertical").classes("w-full") as stepper:
 
-            def add_unlocker_to_div(event: GenericEventArguments) -> None:
+            def set_div_to_unlocker(event: GenericEventArguments) -> None:
+                passcode_div.clear()
                 with passcode_div:
                     event.value(on_passcode_set, "Set Passcode")
 
@@ -111,7 +112,7 @@ def create_vault_page(storage: VaultStorage) -> None:
 
             with ui.step("Step 2: Vault Unlock Method"):
                 ui.label("Choose how you want to unlock your vault:")
-                ui.select({x: x.get_name() for x in ALL_PASSCODE_INPUTS}).on_value_change(add_unlocker_to_div)
+                ui.select({x: x.get_name() for x in ALL_PASSCODE_INPUTS}).on_value_change(set_div_to_unlocker)
                 with ui.stepper_navigation():
                     ui.button("Next", on_click=stepper.next)
                     ui.button("Back", on_click=stepper.previous).props("flat")
