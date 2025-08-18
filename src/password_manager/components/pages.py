@@ -89,48 +89,48 @@ def create_vault_page(storage: VaultStorage) -> None:
                 ui.notify(f"Failed to create {e}", color="negative")
 
     def on_passcode_set(p: Passcode) -> None:
+        ui.notify(f"updated passcode", type="info")
         registration_info["unlock_key"] = p
 
-    with ui.card().classes("absolute-center items-center"):
-        with ui.stepper().props("vertical").classes("w-full") as stepper:
+    with ui.stepper().props("vertical").classes("absolute-center items-center") as stepper:
 
-            async def stepper_next_if_valid_vid() -> None:
-                if storage.exists(registration_info["vault_id"]):
-                    ui.notify("Vault already exists", color="negative")
-                else:
-                    stepper.next()
+        async def stepper_next_if_valid_vid() -> None:
+            if storage.exists(registration_info["vault_id"]):
+                ui.notify("Vault already exists", color="negative")
+            else:
+                stepper.next()
 
-            def set_div_to_unlocker(event: GenericEventArguments) -> None:
-                passcode_div.clear()
-                with passcode_div:
-                    event.value(on_passcode_set, "Set Passcode")
+        def set_div_to_unlocker(event: GenericEventArguments) -> None:
+            passcode_div.clear()
+            with passcode_div:
+                event.value(on_passcode_set, "Set Passcode")
 
-            with ui.step("Step 1: Vault Identifier"):
-                ui.label("Set a unique identifier for your vault:")
-                (
-                    ui.input("Vault Identifier", value=app.storage.user.get("vault_id", ""))
-                    .props("autofocus")
-                    .bind_value_to(registration_info, "vault_id")
-                )
-                with ui.stepper_navigation():
-                    ui.button("Next", on_click=stepper_next_if_valid_vid).bind_enabled(registration_info, "vault_id")
+        with ui.step("Step 1: Vault Identifier"):
+            ui.label("Set a unique identifier for your vault:")
+            (
+                ui.input("Vault Identifier", value=app.storage.user.get("vault_id", ""))
+                .props("autofocus")
+                .bind_value_to(registration_info, "vault_id")
+            )
+            with ui.stepper_navigation():
+                ui.button("Next", on_click=stepper_next_if_valid_vid).bind_enabled(registration_info, "vault_id")
 
-            with ui.step("Step 2: Vault Unlock Method"):
-                ui.label("Choose how you want to unlock your vault:")
-                ui.select({x: x.get_name() for x in ALL_PASSCODE_INPUTS}).on_value_change(set_div_to_unlocker)
-                with ui.stepper_navigation():
-                    ui.button("Next", on_click=stepper.next)
-                    ui.button("Back", on_click=stepper.previous).props("flat")
+        with ui.step("Step 2: Vault Unlock Method"):
+            ui.label("Choose how you want to unlock your vault:")
+            ui.select({x: x.get_name() for x in ALL_PASSCODE_INPUTS}).on_value_change(set_div_to_unlocker)
+            with ui.stepper_navigation():
+                ui.button("Next", on_click=stepper.next)
+                ui.button("Back", on_click=stepper.previous).props("flat")
 
-            with ui.step("Step 3: Set Passcode") as step3:
-                ui.label("Set your passcode:")
-                passcode_div = ui.element("div")
-                with ui.stepper_navigation():
-                    ui.button("Create Vault", on_click=try_create)
-                    ui.button("Back", on_click=stepper.previous).props("flat")
+        with ui.step("Step 3: Set Passcode") as step3:
+            ui.label("Set your passcode:")
+            passcode_div = ui.element("div")
+            with ui.stepper_navigation():
+                ui.button("Create Vault", on_click=try_create).bind_enabled(registration_info, "unlock_key")
+                ui.button("Back", on_click=stepper.previous).props("flat")
 
-        # with ui.row().classes("mt-4"):
-        #    ui.button("Next", on_click=try_create)
+    # with ui.row().classes("mt-4"):
+    #    ui.button("Next", on_click=try_create)
 
 
 def clear_vault_session() -> None:
