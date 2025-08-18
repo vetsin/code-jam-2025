@@ -6,7 +6,7 @@ from password_manager.types import Component, Passcode
 from password_manager.util.crypto import UnlockKey
 
 
-TITLE_SECTION_LABEL = "Login / Register"
+TITLE_SECTION_LABEL = "Login"
 
 
 class CredentialSubmitter(Component):

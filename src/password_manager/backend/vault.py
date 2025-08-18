@@ -13,10 +13,10 @@ class VaultKeyValue:
     # for example we may have 'username' with non-sensitive tr, 'password' with a sensitive str,
     # we may have a x509 private key which is sensitive, or a x509 public key which is not sensitive
     # attachments, etc.
-    def __init__(self, key: str, value: Any):
+    def __init__(self, key: str, value: str):
         self._created = datetime.now(UTC)
         self.key: str = key
-        self.value: Any = value
+        self.value: str = value
 
     def __eq__(self, other: object) -> bool:
         if not other:
