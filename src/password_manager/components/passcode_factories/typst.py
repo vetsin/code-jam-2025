@@ -20,7 +20,7 @@ class TypstInput(PasscodeInput):
     def __init__(self, on_submit: Callable[[bytes], None], submit_text: str) -> None:
         """Typst input."""
         with ui.column() as typstinput:
-            ui.codemirror(on_change=lambda e: _render_and_submit_passcode(e.value)).classes("w-64")
+            ui.codemirror(on_change=lambda e: _render_and_submit_passcode(e.value)).classes("h-auto w-64")
             svg = ui.html("")
 
             async def _render_and_submit_passcode(code: str) -> None:
@@ -44,6 +44,7 @@ class TypstInput(PasscodeInput):
                     output: bytes = result.stdout  # type: ignore  # mypy doesn't detect this correctly  # noqa: PGH003
 
                     svg.set_content(output.decode("utf-8"))
+                    print(f"\n\n{output.decode('utf-8')}\n\n")
                     on_submit(output)
                 except subprocess.CalledProcessError:
                     print("typst errored")

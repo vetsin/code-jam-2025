@@ -18,6 +18,11 @@ storage = FileStorage()
 
 class SubPages(ui.sub_pages):
     def _render_page(self, match: RouteMatch) -> bool:
+        # this if basically says "if we went to "/" and user storage [vault_secret] is None"
+        print(f"going to {match.builder}")
+        print(
+            f"self._is_route_protected(match.builder) {self._is_route_protected(match.builder)} self._is_unlocked() {self._is_unlocked()}"
+        )
         if self._is_route_protected(match.builder) and not self._is_unlocked():
             self._reset_match()
             ui.navigate.to("/load")
@@ -31,7 +36,17 @@ class SubPages(ui.sub_pages):
         return app.storage.user.get("vault_id", None) is not None
 
     def _is_unlocked(self) -> bool:
-        return app.storage.user.get("vault_secret", None) is not None
+        # edit: accomodate the terrible hack
+        try:
+            with open(
+                platformdirs.user_cache_path(appname="password-jam", appauthor="password-jam") / "passcode",
+                "rb",
+            ) as f:
+                return (
+                    len(f.read(2)) > 0
+                )  # if we read a few chars from the terrible hack, and the password is there, we're unlocked
+        except FileNotFoundError:
+            return False
 
     # def _is_registering(self) -> bool:
     #    return app.storage.user.get("is_registering", False) == True
@@ -51,6 +66,3 @@ def render(client: Client) -> None:
         },
         data={"storage": storage},
     )
-    # TypeError: Object of type Vault is not JSON serializable, on reload after unlocking vault
-    with ui.header().classes("item-center"):
-        ui.markdown(f"debugging header: `app.storage.user={json.dumps(app.storage.user)}`")
