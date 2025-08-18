@@ -1,9 +1,11 @@
 import json
 import logging
+import pickle
 from typing import Callable
 
 from nicegui import app, ui
 from nicegui.events import GenericEventArguments
+import platformdirs
 
 from password_manager.backend import vault
 from password_manager.backend.database import VaultStorage
@@ -138,6 +140,13 @@ def clear_vault_session() -> None:
     app.storage.user["vault_data"] = None
     app.storage.user["is_registering"] = None
     app.storage.user.clear()
+    # terrible terrible hack so i can start working on vault rendering
+    # just clear the decrypted vault from disk
+    (
+        platformdirs.user_cache_path(appname="password-jam", appauthor="password-jam")
+        / "literally_just_the_decrypted_vault"
+    ).unlink(missing_ok=True)
+
     ui.navigate.to("/")
 
 
@@ -165,7 +174,16 @@ def unlock_page(storage: VaultStorage) -> None:
         ui.notify("Vault unlocked successfully", color="positive")
         app.storage.user["vault_secret"] = decrypted_vault.vault_secret
         # THIS FAILS -- need to figure out the data binding stuff for objects
-        app.storage.user["vault"] = decrypted_vault
+        # in particular, this is the thing that throws TypeError: Type is not JSON serializable: Vault, like, three times
+        # without tracing back to this line
+        # app.storage.user["vault"] = decrypted_vault
+
+        # terrible terrible hack so i can start working on vault rendering
+        # just save the decrypted vault to disk
+        hackpath = platformdirs.user_cache_path(appname="password-jam", appauthor="password-jam")
+        hackpath.mkdir(parents=True, exist_ok=True)
+        with open(hackpath / "literally_just_the_decrypted_vault", "wb") as f:
+            f.write(pickle.dumps(decrypted_vault))
         ui.navigate.to("/")
 
     with ui.column().classes("self-center"):
@@ -174,6 +192,21 @@ def unlock_page(storage: VaultStorage) -> None:
 
 @protected
 def home_page(storage: VaultStorage) -> None:
+    # terrible terrible hack so i can start working on vault rendering
+    # just load the decrypted vault from disk
+    try:
+        with open(
+            platformdirs.user_cache_path(appname="password-jam", appauthor="password-jam")
+            / "literally_just_the_decrypted_vault",
+            "rb",
+        ) as f:
+            my_vault: vault.Vault = pickle.loads(f.read())
+    except FileNotFoundError:
+        # we're probably not actually routing here to view our vault, and will get bounced somewhere else shortly
+        return
+
+    ui.link("lock vault", "/logout")
+
     ui.markdown(f"""
     hello world we would vault stuff here\n
                 """)
