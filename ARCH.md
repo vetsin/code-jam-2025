@@ -24,6 +24,8 @@ We are a 'password manager'. The core data structure for our operation is a Vaul
 
 This must be the definitive specification. If implementations or other descriptions (like in English, above) differ, they or this should be fixed.
 
+We didn't get around to some of this.
+
 ```
 dataclass Backend:
   mut data: set[Vault]
@@ -74,5 +76,7 @@ flowchart TD
 ```
 
 ## Frontend Architecture
+
+We didn't get around to some of this.
 
 ![diagram of frontend architecture as an svg](./arch_frontend.svg)
