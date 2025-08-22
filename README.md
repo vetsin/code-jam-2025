@@ -8,7 +8,7 @@ This project is a concept design for a password manager. But we bet people are g
 | Binary | your given binary string | no mechanism to reset. When creating a passcode, get it right the first time :) Or just respawn the widget somehow.
 | Guesser | whether the correct color and number is guessed <!-- idk, didn't test this myself --> |
 | LongVideo | whether a specific timestamp is found <!-- idk what this one does --> |
-| Map | location | specifically, passcode is lat/long rounded to three digits
+| Map | location to some meters of accuracy | specifically, passcode is lat/long rounded to three digits
 | Snake | the sequence of moves you have taken in the current game |
 | Text | boring normal password :( |
 | Typst | typst output (i.e. `$AA$`, `$\u{1D538}$`, and `$𝔸$` are the same passcode) | to make this functional, add the [`typst` binary](https://github.com/typst/typst?tab=readme-ov-file#installation) to your PATH. Passcodes should be reproducible within the same Typst version.
