@@ -1,10 +1,11 @@
 [project]
-# This section contains metadata about your project.
-# Don't forget to change the name, description, and authors to match your project!
 name = "password_manager"
-description = "Add your description here"
+description = "A password manager, equipped for some... suspect tools for the job."
 authors = [
-    { name = "Your Name" }
+    { name = "wade-cheng" },
+    { name = "Ethanscharlie" },
+    { name = "vetsin" },
+    { name = "DavidLlanio" },
 ]
 version = "0.1.0"
 readme = "README.md"
