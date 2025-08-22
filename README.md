@@ -1,42 +1,18 @@
 # Password Manager
 
-## Project Layout
+This project is a concept design for a password manager. But we bet people are getting tired of using passwords to keep track of their passwords---what a tiring tedious fad! Instead, we have developed a few other tools for the job:
 
-### Code
+| Input Method | Passcode | Extra Notes
+| -- | -- | -- |
+| Anagram | whether the anagram is correctly solved <!-- idk, didn't test this myself -->  |
+| Binary | your given binary string |
+| Guesser | whether the thing is correctly guessed <!-- idk, didn't test this myself --> |
+| LongVideo | :) <!-- idk what this one does --> |
+| Map | location to some meters of accuracy |
+| Snake | the sequence of moves you have taken in the current game |
+| Text | boring normal password :( |
+| Typst | typst output (i.e. `$AA$`, `$\u{1D538}$`, and `$𝔸$` are the same passcode) | to make this functional, add the [`typst` binary](https://github.com/typst/typst?tab=readme-ov-file#installation) to your PATH. Passcodes should be reproducible within the same Typst version.
 
-```
-src/
-├── main.py
-└── password_manager/
-    ├── app/
-    ├── components/
-    ├── types/
-    └── util/
-```
+We developed with `uv`. To start our program, use `uv run src/main.py`.
 
-The layout for the frontend code takes inspiration from [bulletproof-react](https://github.com/alan2207/bulletproof-react/blob/master/docs/project-structure.md). We have the `password_manager` library that exposes a few modules.
-
-- `app/` is responsible for the `app.app()` that spawns the entire nicegui application, and is used for the very small `main.py`.
-- `components/` are generally any self-contained element that can be used elsewhere.
-- `types/` provides important types used throughout the application.
-- `util/` provides utility functions like `todo()`, which assists type checking during development.
-
-> [!NOTE]
->
-> `bulletproof-react` suggests making a distinction between components (truly generic things that can be used anywhere, like a file picker) and features (where each module in `password_manager/features/` namespaces feature-specific components that should only be used to implement that feature).
->
-> In that paradigm, our `password_factories` module would be under a login feature instead of the generic components module. We can switch to this or something else if organization gets too crazy.
-
-## Contributing
-
-This project can be developed with `uv`. Main entrypoint is `uv run src/main.py`.
-
-To make the Typst input functional, add the [`typst` binary](https://github.com/typst/typst?tab=readme-ov-file#installation) to your PATH. Passcodes should be reproducible within the same Typst version.
-
-Run `uvx pre-commit install` to install the `.pre-commit-config.yaml` lints.
-
-Some general rules:
-
-- Follow <https://www.conventionalcommits.org/en/v1.0.0/>.
-- Make all edits to the main branch via pull requests (squash merge).
-  - Feel free to approve your own PR for the sake of development speed.
+See developer documentation at [CONTRIBUTING.md](./CONTRIBUTING.md).
